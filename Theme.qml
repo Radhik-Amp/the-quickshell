@@ -26,7 +26,7 @@ Singleton {
     readonly property int tagWidth: 28
     readonly property int tagHeight: 24
     
-    readonly property int vitalsSpacing: 15
+    readonly property int vitalsSpacing: 5
     readonly property int iconToValueSpacing: 8
     readonly property string bracketLeft: "\u{27E8}"
     readonly property string bracketRight: "\u{27E9}"

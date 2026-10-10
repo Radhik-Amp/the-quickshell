@@ -6,21 +6,21 @@ RowLayout {
     RowLayout {
         spacing: Theme.iconToValueSpacing
 
+        BarText { text: Theme.iconMemory }
+        StableText { text: Stats.memUsage + "%"; widest: "100%"}
+    }
+
+    RowLayout {
+        spacing: Theme.iconToValueSpacing
+
         BarText { text: Theme.iconTemp }
-        BarText { text: Stats.temp + "°" }
+        StableText { text: Stats.temp + "°"; widest: "100°" }
     }
 
     RowLayout {
         spacing: Theme.iconToValueSpacing
 
         BarText { text: Theme.iconCpu }
-        BarText { text: Stats.cpuUsage + "%" }
-    }
-
-    RowLayout {
-        spacing: Theme.iconToValueSpacing
-
-        BarText { text: Theme.iconMemory }
-        BarText { text: Stats.memUsage + "%" }
+        StableText { text: Stats.cpuUsage + "%"; widest: "100%"}
     }
 }    

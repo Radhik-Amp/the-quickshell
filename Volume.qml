@@ -35,7 +35,7 @@ RowLayout {
         RowLayout {
             spacing: 2
             BarText { text: Theme.bracketRight}
-            BarText { text: Audio.volume + "%" } 
+            StableText { text: Audio.volume + "%"; widest: "100%" }
         }
     }
 
