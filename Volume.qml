@@ -15,42 +15,35 @@ MouseArea {
 
     RowLayout {
         id: row
+        spacing: -1
+        RowLayout {
+            spacing: 4
+            BarText { text: root.volumeIcon }
+            BarText { text: Theme.bracketLeft }
+            TapHandler { onTapped: Audio.toggleMute() }
+        }        
 
         RowLayout {
-            spacing: 1
-            RowLayout {
-                spacing: 2
-                BarText { text: root.volumeIcon }
-                BarText { text: Theme.bracketLeft }
-                TapHandler { onTapped: Audio.toggleMute() }
-            }        
-
-            RowLayout {
-                spacing: -5
-                Repeater {
-                    model : 20
-                    BarText {
-                        required property int index
-                        readonly property bool countFilled: index < Math.round(Audio.volume / 5) 
-                        readonly property string filled: "\u25C6"
-                        readonly property string empty: "\u25C7"
-                        text: countFilled ? filled : empty
-
-                        WheelHandler { onWheel: event => { 
-                            console.warn("wheel:", event.angleDelta.y) 
-                            Audio.changeVolume(event.angleDelta.y > 0 ? 5 : -5)
-                            } 
-                        }
+            spacing: 0
+            Repeater {
+                model : 20
+                BarText {
+                    required property int index
+                    readonly property bool countFilled: index < Math.round(Audio.volume / 5) 
+                    readonly property color barColor: Audio.muted ? "transparent" : "white"
+                    property string filled: "⣿"
+                    readonly property string empty: "⣉"
+                    text: countFilled ? filled : empty
+                    color: barColor
                     }
-
                 }
             }
-            RowLayout {
-                spacing: 2
-                BarText { text: Theme.bracketRight}
-                StableText { text: Audio.volume + "%"; widest: "100%" }
-            }
-        }
 
+        RowLayout {
+            spacing: 2
+            BarText { text: Theme.bracketRight}
+            StableText { text: Audio.volume + "%"; widest: "100%" }
+        }
     }
+
 }

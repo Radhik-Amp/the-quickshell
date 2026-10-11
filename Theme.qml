@@ -28,8 +28,8 @@ Singleton {
     
     readonly property int vitalsSpacing: 5
     readonly property int iconToValueSpacing: 8
-    readonly property string bracketLeft: "\u{27E8}"
-    readonly property string bracketRight: "\u{27E9}"
+    readonly property string bracketLeft: "⢸"
+    readonly property string bracketRight: "⡇"
     readonly property string iconCpu: "\u{F4BC}"
     readonly property string iconMemory: "\u{EFC5}"
     readonly property string iconTemp: "\u{F050F}"
