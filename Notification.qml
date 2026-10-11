@@ -12,6 +12,10 @@ Scope {
     ListModel {
         id: history
     }
+    function dismissNotif(notifId: int): void {
+        const n = server.trackedNotifications.values.find(n => n.id === notifId)
+        if (n) n.dismiss();
+    }
 
     NotificationServer {
         id: server
@@ -20,6 +24,7 @@ Scope {
         imageSupported: true
         onNotification: n => {
             history.insert(0, {
+                notifId: n.id,
                 summary: n.summary,
                 body: n.body,
                 appName: n.appName,
@@ -46,7 +51,8 @@ Scope {
         implicitHeight: Math.max(1, column.implicitHeight)
         color: "transparent"
 
-        exclusionMode: ExclusionMode.Ignore
+        exclusionMode: ExclusionMode.Normal
+        exclusiveZone: 0
 
         ColumnLayout {
             id: column
@@ -133,7 +139,8 @@ Scope {
         implicitHeight: centerCol.implicitHeight + 24
         color: "transparent"
 
-        exclusionMode: ExclusionMode.Ignore
+        exclusionMode: ExclusionMode.Normal
+        exclusiveZone: 0
 
         Rectangle {
             anchors.fill: parent
@@ -165,7 +172,7 @@ Scope {
                         font.pixelSize: Theme.fontSize - 1
                         MouseArea {
                             anchors.fill: parent
-                            onClicked: history.clear()
+                            onClicked:  { for (const n of server.trackedNotifications.values.slice()) n.dismiss(); history.clear() }
                         }
                     }
                 }
@@ -181,6 +188,7 @@ Scope {
                     delegate: Rectangle {
                         id: entry
                         required property int index
+                        required property int notifId
                         required property string summary
                         required property string body
                         required property string appName
@@ -238,7 +246,7 @@ Scope {
                                         anchors.fill: parent
                                         hoverEnabled: true
                                         cursorShape: Qt.PointingHandCursor
-                                        onClicked: history.remove(entry.index)
+                                        onClicked: { root.dismissNotif(entry.notifId); history.remove(entry.index) }
                                     }
 
                                 }
