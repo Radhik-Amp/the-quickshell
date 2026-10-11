@@ -15,33 +15,33 @@ MouseArea {
 
     RowLayout {
         id: row
-        spacing: -1
+        spacing: 0
         RowLayout {
             spacing: 4
             BarText { text: root.volumeIcon }
-            BarText { text: Theme.bracketLeft }
+            BarText { text: Theme.bracketLeft; color: Audio.muted ? "#4e4e4e" : "white" }
             TapHandler { onTapped: Audio.toggleMute() }
         }        
 
         RowLayout {
             spacing: 0
             Repeater {
+                id: volumeBar
                 model : 20
                 BarText {
                     required property int index
                     readonly property bool countFilled: index < Math.round(Audio.volume / 5) 
-                    readonly property color barColor: Audio.muted ? "transparent" : "white"
                     property string filled: "⣿"
                     readonly property string empty: "⣉"
                     text: countFilled ? filled : empty
-                    color: barColor
+                    color: Audio.muted ? "#4e4e4e" : "white"
                     }
                 }
             }
 
         RowLayout {
             spacing: 2
-            BarText { text: Theme.bracketRight}
+            BarText { text: Theme.bracketRight; color: Audio.muted ? "#4e4e4e" : "white"}
             StableText { text: Audio.volume + "%"; widest: "100%" }
         }
     }
