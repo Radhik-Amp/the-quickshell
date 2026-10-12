@@ -45,4 +45,34 @@ RowLayout {
             }
         }
     }
+    Item {
+        id: layoutIndicator
+        implicitWidth: layoutIcon.width
+        implicitHeight: Theme.tagHeight
+        Item {
+            id: layoutIcon
+            anchors.centerIn: parent
+            height: Theme.tagHeight - 4
+            width: Math.round(height * 9 / 7)
+            x: Math.round((parent.width - width) / 2)
+            y: Math.round((parent.height - height) / 2)
+
+            Repeater {
+                model: Theme.layoutRects[Mango.layout] ?? []
+
+                Rectangle {
+                    required property var modelData
+                    x: modelData[0] * parent.width
+                    y: modelData[1] * parent.height
+                    width: modelData[2] * parent.width - 1
+                    height: modelData[3] * parent.height - 1
+                    opacity: modelData[4] ?? 1
+                    radius: 1
+                    color: modelData[4] ? "white" : Theme.background
+                    border.width: 1
+                    border.color: "white"
+                }
+            }
+        }
+    }
 }

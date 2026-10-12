@@ -29,10 +29,9 @@ PanelWindow {
             anchors.left: parent.left
             anchors.leftMargin: Theme.padding
             anchors.verticalCenter: parent.verticalCenter
-            spacing: Theme.padding
+            spacing: Theme.barSpacing
 
             Tags {}
-            BarText { text: Mango.layout }
             Media {}
         }
 
@@ -44,7 +43,7 @@ PanelWindow {
             anchors.right: parent.right
             anchors.rightMargin: Theme.padding
             anchors.verticalCenter: parent.verticalCenter
-            spacing: Theme.padding
+            spacing: Theme.barSpacing
 
             Volume {}
             Vitals {}

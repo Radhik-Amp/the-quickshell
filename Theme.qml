@@ -16,6 +16,7 @@ Singleton {
     readonly property int padding: 10
     readonly property int radius: 5
     readonly property int borderWidth: 2
+    readonly property int barSpacing: 20
 
     readonly property color tagActive: Qt.rgba(1, 1, 1, 0.20)
     readonly property color tagHover: Qt.rgba(1, 1, 1, 0.08)
@@ -25,6 +26,23 @@ Singleton {
     readonly property color tagUrgent: Qt.rgba(1, 1, 1, 0.35)
     readonly property int tagWidth: 28
     readonly property int tagHeight: 24
+
+    readonly property var layoutRects: ({
+        "T":  [[0,0,.5,1], [.5,0,.5,.5], [.5,.5,.5,.5]],
+        "RT": [[.5,0,.5,1], [0,0,.5,.5], [0,.5,.5,.5]],
+        "VT": [[0,0,1,.5], [0,.5,.5,.5], [.5,.5,.5,.5]],
+        "CT": [[.25,0,.5,1], [0,0,.25,1], [.75,0,.25,1]],
+        "M":  [[0,0,1,1]],
+        "K":  [[0,0,.5,1], [.58,.14,.42,.86], [.5,0,.42,.86]],
+        "VK": [[0,0,1,.5], [.1,.6,.9,.4], [0,.5,.9,.4]],
+        "G":  [[0,0,.5,.5], [.5,0,.5,.5], [0,.5,.5,.5], [.5,.5,.5,.5]],
+        "VG": [[0,0,.5,.333], [.5,0,.5,.333], [0,.333,.5,.333], [.5,.333,.5,.333], [0,.667,.5,.333], [.5,.667,.5,.333]],
+        "S":  [[0,0,.2,1,.5], [.2,0,.6,1], [.8,0,.2,1,.5]],
+        "VS": [[0,0,1,.25,.5], [0,.25,1,.5], [0,.75,1,.25,.5]],
+        "DW": [[0,0,.5,1], [.5,0,.5,.5], [.5,.5,.25,.5], [.75,.5,.25,.25], [.75,.75,.25,.25]],
+        "F":  [[0,0,.333,1], [.333,0,.333,1], [.667,0,.333,1]],
+        "VF": [[0,0,1,.333], [0,.333,1,.333], [0,.667,1,.333]]
+    })
     
     readonly property int vitalsSpacing: 5
     readonly property int iconToValueSpacing: 8
