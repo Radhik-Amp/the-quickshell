@@ -23,10 +23,13 @@ RowLayout {
         property string text: player ? `${root.player.trackArtist} — ${root.player.trackTitle}` : "Nothing playing"
         property int speed: 40
         property int gap: 30
+        property real rowOffset: 0
         RowLayout {
             id: row
             spacing: 30
             anchors.verticalCenter: parent.verticalCenter
+            x: ticker.overflowing ? ticker.scrollOffset : (ticker.width - tickerText.implicitWidth) / 2
+
             BarText {
                 id: tickerText
                 text: ticker.text
@@ -40,15 +43,15 @@ RowLayout {
             id: animation
             running: ticker.overflowing && root.player?.isPlaying
             target: row
-            property: "x"
+            property: "rowOffset"
             from: 0
             to: -(tickerText.width + ticker.gap)
             duration: (tickerText.implicitWidth + ticker.gap) / ticker.speed * 1000
             loops: Animation.Infinite
-            onRunningChanged: if (!running) tickerText.x = 0
+            onRunningChanged: if (!running) ticker.rowOffset = 0
 
         }
-        onTextChanged: {row.x = 0; if (animation.running) animation.restart() }
+        onTextChanged: {rowOffset = 0; if (animation.running) animation.restart() }
 
     }
     BarText {
