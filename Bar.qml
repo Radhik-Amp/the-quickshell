@@ -33,6 +33,7 @@ PanelWindow {
 
             Tags {}
             BarText { text: Mango.layout }
+            Media {}
         }
 
         Clock {

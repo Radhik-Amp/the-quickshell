@@ -41,5 +41,9 @@ Singleton {
     readonly property string iconWifi: "\u{F05A9}"
     readonly property string iconEthernet: "\u{F0200}"
     readonly property string iconOffline: "\u{F05AA}"
+    readonly property string iconPlay: "\u{F040A}"
+    readonly property string iconPause: "\u{F03E4}"
+    readonly property string iconNext: "\u{F04AD}"
+    readonly property string iconPrevious: "\u{F04AE}"
 }
 
