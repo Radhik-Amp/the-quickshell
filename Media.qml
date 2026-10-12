@@ -5,7 +5,12 @@ import QtQuick.Layouts
 
 RowLayout {
     id: root
-    property var player: Mpris.players.values[0]
+    property var players: Mpris.players.values
+    readonly property var player: players.find(p => p.isPlaying && p.identity.toLowerCase().includes("spotify"))
+        ?? players.find(p => p.isPlaying)
+        ?? players.find(p => p.identity.toLowerCase().includes("spotify"))
+        ?? players[0]
+
     spacing: Theme.padding
 
     BarText {
@@ -20,7 +25,7 @@ RowLayout {
         implicitWidth: 200
         implicitHeight: tickerText.implicitHeight
         readonly property bool overflowing: tickerText.implicitWidth > width
-        property string text: player ? `${root.player.trackArtist} — ${root.player.trackTitle}` : "Nothing playing"
+        property string text: root.player ? `${root.player.trackArtist} — ${root.player.trackTitle}` : "Nothing playing"
         property int speed: 40
         property int gap: 30
         property real rowOffset: 0
@@ -28,7 +33,7 @@ RowLayout {
             id: row
             spacing: 30
             anchors.verticalCenter: parent.verticalCenter
-            x: ticker.overflowing ? ticker.scrollOffset : (ticker.width - tickerText.implicitWidth) / 2
+            x: ticker.overflowing ? ticker.rowOffset : (ticker.width - tickerText.implicitWidth) / 2
 
             BarText {
                 id: tickerText
@@ -42,10 +47,10 @@ RowLayout {
         NumberAnimation {
             id: animation
             running: ticker.overflowing && root.player?.isPlaying
-            target: row
+            target: ticker
             property: "rowOffset"
             from: 0
-            to: -(tickerText.width + ticker.gap)
+            to: -(tickerText.implicitWidth + ticker.gap)
             duration: (tickerText.implicitWidth + ticker.gap) / ticker.speed * 1000
             loops: Animation.Infinite
             onRunningChanged: if (!running) ticker.rowOffset = 0
