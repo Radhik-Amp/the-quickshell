@@ -13,12 +13,7 @@ RowLayout {
 
     spacing: Theme.padding
 
-    BarText {
-        text: Theme.iconPlay
-    }
-    BarText {
-        text: Theme.iconPrevious
-    }
+   
     Item {
         id: ticker
         clip: true
@@ -60,7 +55,25 @@ RowLayout {
 
     }
     BarText {
+        text: Theme.iconPrevious
+        MouseArea {
+            anchors.fill: parent
+            onClicked: root.player.previous()
+        }
+    }
+    BarText {
+        text: root.player.isPlaying ? Theme.iconPause : Theme.iconPlay
+        MouseArea {
+            anchors.fill: parent
+            onClicked: root.player.togglePlaying()
+        }
+    }
+    BarText {
         text: Theme.iconNext
+        MouseArea {
+            anchors.fill: parent
+            onClicked: root.player.next()
+        }
     }
 
 
