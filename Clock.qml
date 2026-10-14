@@ -14,8 +14,12 @@ BarText {
         precision: SystemClock.Minutes
     }
 
-    MouseArea {
-        anchors.fill: parent
-        onClicked: root.showDate = !root.showDate
+    TapHandler {
+        acceptedButtons: Qt.LeftButton
+        onTapped: root.showDate = !root.showDate
+    }
+    TapHandler {
+        acceptedButtons: Qt.RightButton
+        onTapped: ControlState.shown = !ControlState.shown
     }
 }
