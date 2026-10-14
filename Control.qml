@@ -1,5 +1,7 @@
+import qs
 import Quickshell
 import Quickshell.Io
+import Quickshell.Wayland
 import QtQuick
 import QtQuick.Layouts
 
@@ -13,8 +15,8 @@ PanelWindow {
 //    exclusiveZone: 0
 
     implicitWidth: 540
-    readonly property int tether: Theme.padding * 2
-    readonly property int panelHeight: 300
+    readonly property int tether: Theme.padding
+    readonly property int panelHeight: column.implicitHeight + Theme.padding * 2
 
     implicitHeight: tether + panelHeight
     color: "transparent"
@@ -23,15 +25,19 @@ PanelWindow {
 
     mask: Region { item: clipper }
 
+    WlrLayershell.keyboardFocus: shown ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
+
     IpcHandler {
         target: "control"
-        function toggle(): void { root.shown = !root.shown } 
+        function toggle(): void { ControlState.shown = !ControlState.shown } 
     }
     Item {
         id: clipper
         clip: true
         width: root.implicitWidth
         height: root.shown ? root.implicitHeight : 0
+        focus: true
+        Keys.onEscapePressed: ControlState.shown = false
 
         Rectangle {
             x: Math.round(parent.width / 2)
@@ -45,6 +51,15 @@ PanelWindow {
             implicitHeight: root.panelHeight
             color: Theme.background
             radius: Theme.radius
+            ColumnLayout {
+                id: column
+                anchors {
+                    top: parent.top
+                    left: parent.left
+                    right: parent.right
+                    margins: Theme.padding
+                }
+            }
         }
         Rectangle {
             anchors.fill: parent
@@ -63,6 +78,4 @@ PanelWindow {
             }
         }
     }
-
-
 }
