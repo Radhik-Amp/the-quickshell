@@ -20,7 +20,7 @@ RowLayout {
         text: root.dot + " all systems nominal"
     }
     Timer {
-        interval: 1500
+        interval: 1000
         running: true
         repeat: true
         onTriggered: root.beep = !root.beep

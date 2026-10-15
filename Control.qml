@@ -31,6 +31,12 @@ PanelWindow {
         target: "control"
         function toggle(): void { ControlState.shown = !ControlState.shown } 
     }
+
+    SystemClock {
+        id: clock
+        precision: SystemClock.Seconds
+    }
+
     Item {
         id: clipper
         clip: true
@@ -45,6 +51,7 @@ PanelWindow {
             height: root.tether
             color: Theme.borderColor
         }
+
         Rectangle {
             y: root.tether
             implicitWidth: root.implicitWidth
@@ -65,7 +72,62 @@ PanelWindow {
                     implicitHeight: 1
                     color: Qt.rgba(1, 1, 1, 0.5)
                 }
-                ControlClock { Layout.fillWidth: true }
+
+
+                RowLayout {
+                    Layout.fillWidth: true
+                    spacing: Theme.padding
+
+
+                    ColumnLayout {
+                        BarText {
+                            Layout.fillWidth: true
+                            horizontalAlignment: Text.AlignHCenter
+                            text: Qt.formatDateTime(clock.date, "hh:mm:ss AP")
+                            fontSizeMode: Text.HorizontalFit
+                        }
+
+                        BarText {
+                            Layout.fillWidth: true
+                            horizontalAlignment: Text.AlignHCenter
+                            text: Qt.formatDateTime(clock.date, "dddd, MMMM d, yyyy")
+                            fontSizeMode: Text.HorizontalFit
+                        }
+
+                        ControlClock {
+                            Layout.preferredWidth: 190
+                        }
+                    }
+
+                    ColumnLayout {
+                        Layout.fillWidth: true
+                        Layout.alignment: Qt.AlignTop
+
+                        GridLayout {
+                            Layout.fillWidth: true
+                            columns: 2
+                            uniformCellWidths: true
+
+                            ControlToggle {
+                                Layout.fillWidth: true
+                                property bool fake: true
+                                label: "wifi"
+                                status: fake ? "connected" : "off"
+                                active: fake
+                                onClicked: fake = !fake
+                            }
+
+                            ControlToggle {
+                                Layout.fillWidth: true
+                                property bool fake: false
+                                label: "bluetooth"
+                                status: fake ? "on" : "off"
+                                active: fake
+                                onClicked: fake = !fake
+                            }
+                        }
+                    }
+                }
             }
         }
         Rectangle {

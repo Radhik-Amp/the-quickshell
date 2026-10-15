@@ -14,11 +14,6 @@ ColumnLayout {
     readonly property int offset: new Date(year, month, 1).getDay()
     readonly property int daysInMonth: new Date(year, month + 1, 0).getDate()
 
-    SystemClock {
-        id: clock
-        precision: SystemClock.Seconds
-    }
-
     TextMetrics {
     id: digits
     text: "00"
@@ -26,22 +21,13 @@ ColumnLayout {
     font.pixelSize: Theme.fontSize
     }
 
-    BarText {
-        Layout.alignment: Qt.AlignHCenter
-        text: Qt.formatDateTime(clock.date, "hh:mm:ss AP")
-    }
-
-    BarText {
-        Layout.alignment: Qt.AlignHCenter
-        text: Qt.formatDateTime(clock.date, "dddd, MMMM d, yyyy")
-    }
-
     GridLayout {
         columns: 7
+        columnSpacing: 2
         Layout.fillWidth: true
 
         Repeater {
-            model: ["s", "m", "t", "w", "t", "f", "s"]
+            model: ["[s]", "[m]", "[t]", "[w]", "[t]", "[f]", "[s]"]
 
             BarText {
                 Layout.alignment: Qt.AlignHCenter
@@ -60,9 +46,9 @@ ColumnLayout {
                 readonly property bool isPast: day > 0 && day < root.today
 
                 Layout.fillWidth: true
-                implicitWidth: digits.width + 8
-                implicitHeight: digits.height + 8
-                color: hover.hovered && day > 0 ? "#1c1c1c" : "transparent"
+                implicitWidth: digits.width + 4
+                implicitHeight: digits.height + 4
+                color: hover.hovered && day > 0 ? Qt.rgba(0.28, 0.28, 0.28, 0.35) : "transparent"
                 radius: Theme.radius
 
                 HoverHandler {
