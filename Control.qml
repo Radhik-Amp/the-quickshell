@@ -60,6 +60,12 @@ PanelWindow {
                     margins: Theme.padding
                 }
                 ControlHeader {}
+                Rectangle {
+                    Layout.fillWidth: true
+                    implicitHeight: 1
+                    color: Qt.rgba(1, 1, 1, 0.5)
+                }
+                ControlClock { Layout.fillWidth: true }
             }
         }
         Rectangle {
