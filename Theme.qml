@@ -15,7 +15,7 @@ Singleton {
     readonly property int barHeight: 40
     readonly property int padding: 10
     readonly property int radius: 5
-    readonly property int borderWidth: 2
+    readonly property int borderWidth: 1
     readonly property int barSpacing: 20
 
     readonly property color tagActive: Qt.rgba(1, 1, 1, 0.20)

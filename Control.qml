@@ -59,6 +59,7 @@ PanelWindow {
                     right: parent.right
                     margins: Theme.padding
                 }
+                ControlHeader {}
             }
         }
         Rectangle {
