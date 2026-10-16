@@ -3,6 +3,7 @@ import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
 import Quickshell.Bluetooth
+import Quickshell.Networking
 import QtQuick
 import QtQuick.Layouts
 
@@ -113,11 +114,15 @@ PanelWindow {
 
                             ControlToggle {
                                 Layout.fillWidth: true
-                                property bool fake: true
-                                label: "wifi"
-                                status: fake ? "connected" : "off"
-                                active: fake
-                                onClicked: fake = !fake
+                                readonly property var wifi: Networking.devices.values.find(d => d.type === DeviceType.Wifi)
+                                readonly property var wifiNet: wifi?.networks.values.find(n => n.connected)
+                                icon: Ethernet.connected ? "\u{F0200}" : wifiNet ? "\u{F05A9}" : "\u{F05AA}"
+                                label: "network"
+                                status: Ethernet.connected ? "wired"
+                                      : wifiNet ? wifiNet.name
+                                      : Networking.wifiEnabled ? "not connected" : "off" 
+                                active: Networking.wifiEnabled
+                                onClicked: Networking.wifiEnabled = !Networking.wifiEnabled
                             }
 
                             ControlToggle {
@@ -126,6 +131,7 @@ PanelWindow {
                                                                ? adapter.devices.values.filter(d => d.connected).length
                                                                : 0
                                 Layout.fillWidth: true
+                                icon: "\u{F00AF}"
                                 label: "bluetooth"
                                 status: !adapter.enabled ? "off"
                                       : connected > 0 ? connected + " connected"
