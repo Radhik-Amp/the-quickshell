@@ -33,6 +33,7 @@ ColumnLayout {
                 Layout.alignment: Qt.AlignHCenter
                 required property var modelData
                 text: modelData
+                color: Qt.rgba(1, 1, 1, 0.65)
             }
         }
 

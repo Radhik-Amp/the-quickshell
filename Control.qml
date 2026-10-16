@@ -66,7 +66,9 @@ PanelWindow {
                     right: parent.right
                     margins: Theme.padding
                 }
+
                 ControlHeader {}
+
                 Rectangle {
                     Layout.fillWidth: true
                     implicitHeight: 1
@@ -78,20 +80,20 @@ PanelWindow {
                     Layout.fillWidth: true
                     spacing: Theme.padding
 
-
                     ColumnLayout {
                         BarText {
                             Layout.fillWidth: true
                             horizontalAlignment: Text.AlignHCenter
                             text: Qt.formatDateTime(clock.date, "hh:mm:ss AP")
-                            fontSizeMode: Text.HorizontalFit
+                            font.pixelSize: 26
                         }
 
                         BarText {
                             Layout.fillWidth: true
                             horizontalAlignment: Text.AlignHCenter
-                            text: Qt.formatDateTime(clock.date, "dddd, MMMM d, yyyy")
-                            fontSizeMode: Text.HorizontalFit
+                            text: Qt.formatDateTime(clock.date, "MMMM yyyy")
+                            font.pixelSize: 18
+                            color: Qt.rgba(1, 1, 1, 0.85)
                         }
 
                         ControlClock {
@@ -137,8 +139,8 @@ PanelWindow {
             border.color: Theme.borderColor
             border.width: Theme.borderWidth
             radius: Theme.radius
-        
         }
+
         Behavior on height {
             NumberAnimation {
                 duration: 750

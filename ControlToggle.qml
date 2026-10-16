@@ -15,8 +15,8 @@ Rectangle {
     readonly property color fg: active ? Theme.background : Theme.borderColor
     readonly property color dim: active ? Qt.rgba(0, 0, 0, 0.55) : Qt.rgba(1, 1, 1, 0.45)
 
-    implicitHeight: content.implicitHeight + 16
-    implicitWidth: content.implicitWidth + 16
+    implicitHeight: content.implicitHeight + 4
+    width: statusLength.width 
     radius: Theme.radius
     border.width: Theme.borderWidth
     border.color: active || hover.hovered ? Theme.borderColor : Qt.rgba(1, 1, 1, 0.25)
@@ -25,8 +25,15 @@ Rectangle {
         : (hover.hovered ? Qt.rgba(1, 1, 1, 0.08) : "transparent")
 
     scale: tap.pressed ? 0.96 : 1
-    Behavior on color { ColorAnimation { duration: 120 } }
+
+    TextMetrics {
+        id: statusLength
+        text: "connected"
+        font.family: Theme.fontFamily
+        font.pixelSize: Theme.fontSize
+    }
     Behavior on scale { NumberAnimation { duration: 80 } }
+    
 
     HoverHandler { id: hover }
     TapHandler {
