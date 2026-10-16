@@ -2,6 +2,7 @@ import qs
 import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
+import Quickshell.Bluetooth
 import QtQuick
 import QtQuick.Layouts
 
@@ -120,12 +121,17 @@ PanelWindow {
                             }
 
                             ControlToggle {
+                                readonly property BluetoothAdapter adapter: Bluetooth.defaultAdapter
+                                readonly property int connected: adapter
+                                                               ? adapter.devices.values.filter(d => d.connected).length
+                                                               : 0
                                 Layout.fillWidth: true
-                                property bool fake: false
                                 label: "bluetooth"
-                                status: fake ? "on" : "off"
-                                active: fake
-                                onClicked: fake = !fake
+                                status: !adapter.enabled ? "off"
+                                      : connected > 0 ? connected + " connected"
+                                      : "on"
+                                active: adapter?.enabled ?? false
+                                onClicked: if (adapter) adapter.enabled = !adapter.enabled
                             }
                         }
                     }
