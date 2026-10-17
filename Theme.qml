@@ -6,6 +6,7 @@ import QtQuick
 Singleton {
     readonly property color background: Qt.rgba(0, 0, 0, 0.85)
     readonly property color borderColor: Qt.rgba(1, 1, 1, 0.85)
+    readonly property color borderColorMuted: Qt.rgba(1, 1, 1, 0.25)
     readonly property color text: "white"
     readonly property color textDim: Qt.rgba(1, 1, 1, 0.45)
 

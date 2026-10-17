@@ -82,24 +82,42 @@ PanelWindow {
                     Layout.fillWidth: true
                     spacing: Theme.padding
 
-                    ColumnLayout {
-                        BarText {
-                            Layout.fillWidth: true
-                            horizontalAlignment: Text.AlignHCenter
-                            text: Qt.formatDateTime(clock.date, "hh:mm:ss AP")
-                            font.pixelSize: 26
-                        }
+                    Rectangle {
+                        Layout.preferredWidth: (root.implicitWidth - Theme.padding * 2) / 2 
+                        implicitHeight: content.implicitHeight + Theme.padding * 2
+                        color: "transparent"
+                        radius: Theme.radius
+                        border.color: Theme.borderColorMuted
+                        border.width: Theme.borderWidth
 
-                        BarText {
-                            Layout.fillWidth: true
-                            horizontalAlignment: Text.AlignHCenter
-                            text: Qt.formatDateTime(clock.date, "MMMM yyyy")
-                            font.pixelSize: 18
-                            color: Qt.rgba(1, 1, 1, 0.85)
-                        }
+                        ColumnLayout {
+                            id: content
+                            anchors {
+                                top: parent.top
+                                left: parent.left
+                                right: parent.right
+                                margins: Theme.padding
 
-                        ControlClock {
-                            Layout.preferredWidth: 190
+                            }
+                            BarText {
+                                Layout.fillWidth: true
+                                horizontalAlignment: Text.AlignHCenter
+                                text: Qt.formatDateTime(clock.date, "hh:mm:ss AP")
+                                font.pixelSize: 26
+                            }
+
+                            BarText {
+                                Layout.fillWidth: true
+                                horizontalAlignment: Text.AlignHCenter
+                                text: Qt.formatDateTime(clock.date, "MMMM yyyy")
+                                font.pixelSize: 18
+                                color: Qt.rgba(1, 1, 1, 0.85)
+                            }
+
+                            ControlClock {
+                                Layout.fillWidth: true
+                                //Layout.preferredWidth: 190
+                            }
                         }
                     }
 

@@ -19,7 +19,7 @@ Rectangle {
     width: statusLength.width 
     radius: Theme.radius
     border.width: Theme.borderWidth
-    border.color: active || hover.hovered ? Theme.borderColor : Qt.rgba(1, 1, 1, 0.25)
+    border.color: active || hover.hovered ? Theme.borderColor : Theme.borderColorMuted
     color: active
         ? (hover.hovered ? Qt.rgba(1, 1, 1, 0.85) : Theme.borderColor)
         : (hover.hovered ? Qt.rgba(1, 1, 1, 0.08) : "transparent")
