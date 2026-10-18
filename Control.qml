@@ -157,6 +157,28 @@ PanelWindow {
                                 active: adapter?.enabled ?? false
                                 onClicked: if (adapter) adapter.enabled = !adapter.enabled
                             }
+
+                            ControlToggle {
+                                property bool fake: false
+
+                                Layout.fillWidth: true
+                                icon: "\u{F0594}"
+                                label: "dnd"
+                                status: ControlState.dnd ? "on" : "off"
+                                active: ControlState.dnd
+                                onClicked: ControlState.dnd = !ControlState.dnd
+                            }
+
+                            ControlToggle {
+                                property bool fake: false
+
+                                Layout.fillWidth: true
+                                icon: "\u{F0176}"
+                                label: "caffiene"
+                                status: fake ? "on" : "off"
+                                active: fake
+                                onClicked: fake = !fake
+                            }
                         }
                     }
                 }

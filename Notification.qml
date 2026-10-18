@@ -1,3 +1,4 @@
+import qs
 import Quickshell
 import Quickshell.Services.Notifications
 import Quickshell.Io
@@ -31,6 +32,7 @@ Scope {
                 urgency: n.urgency,
                 time: Qt.formatDateTime(new Date(), "HH:mm")
             })
+            if (ControlState.dnd && n.urgency !== NotificationUrgency.Critical) return
             n.tracked = true
         }
     }
@@ -40,6 +42,7 @@ Scope {
         function toggle(): void { root.centerOpen = !root.centerOpen }
         function show(): void { root.centerOpen = true }
         function hide(): void { root.centerOpen = false }
+        function toggleDnd(): void { ControlState.dnd = !ControlState.dnd }
     }
 
     PanelWindow {
@@ -196,12 +199,12 @@ Scope {
                         required property string time
 
                         width: ListView.view.width
-                        implicitHeight: entryCol.implicitHeight + 2 * Theme.padding
+                        implicitHeight: entryCol.implicitHeight + Theme.padding * 2
                         radius: Theme.radius
                         color: "transparent"
                         border.width: Theme.borderWidth
                         border.color: urgency === NotificationUrgency.Critical
-                            ? "#E05252" : Theme.borderColor
+                            ? "#E05252" : Theme.borderColorMuted
 
                         ColumnLayout {
                             id: entryCol
@@ -232,14 +235,12 @@ Scope {
                                     implicitWidth: implicitHeight
                                     radius: Theme.radius
                                     color: "transparent"
-                                    border.color: mouseClose.containsMouse ? "#E05252" : "transparent"
-                                    border.width: 1
                                     BarText {
                                         id: closeText
                                         anchors.centerIn: parent
-                                        text: "X"
+                                        text: "\u{F0156}"
                                         font.pixelSize: Theme.fontSize - 2
-
+                                        color: mouseClose.containsMouse ? "#E05252" : "white"
                                     }
                                     MouseArea {
                                         id: mouseClose
