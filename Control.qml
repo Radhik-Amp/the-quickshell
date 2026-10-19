@@ -6,6 +6,7 @@ import Quickshell.Bluetooth
 import Quickshell.Networking
 import QtQuick
 import QtQuick.Layouts
+import QtQuick.Controls
 
 PanelWindow {
     id: root
@@ -179,6 +180,37 @@ PanelWindow {
                                 active: fake
                                 onClicked: fake = !fake
                             }
+
+                        }
+
+                        Slider {
+                            Layout.fillWidth: true
+                            id: brightnessSlider
+                            from: 0
+                            to: Brightness.max
+                            stepSize: 5
+
+                            Binding on value {
+                                value: Brightness.value
+                                when: !brightnessSlider.pressed
+                            }
+
+                            onMoved: Brightness.set(Math.round(value))
+                        }
+
+                        Slider {
+                            Layout.fillWidth: true
+                            id: volumeSlider
+                            from: 0
+                            to: 100
+                            stepSize: 5
+
+                            Binding on value {
+                                value: Audio.volume
+                                when: !volumeSlider.pressed
+                            }
+
+                            onMoved: Audio.setVolume(Math.round(value))
                         }
                     }
                 }

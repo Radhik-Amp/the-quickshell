@@ -18,6 +18,11 @@ Singleton {
         defaultSink.audio.muted = !(defaultSink.audio.muted) 
     }
 
+    function setVolume(v) {
+        if (!defaultSink?.ready) return
+        defaultSink.audio.volume = Math.max(0, Math.min(1, v / 100))
+    }
+
     function changeVolume(number) {
         if (!defaultSink?.ready) return 
         const v = defaultSink.audio.volume + (number / 100)
