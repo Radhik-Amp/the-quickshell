@@ -53,7 +53,7 @@ ColumnLayout {
                     implicitHeight: 10
 
                     color: countFilled ? Qt.rgba(1, 1, 1, 1) : Qt.rgba(1, 1, 1, 0.15)
-                    radius: 1
+                    radius: 2
                     border.width: countFilled ? 1 : 0
                     border.color: countFilled ? Theme.borderColorMuted : "transparent"
                     

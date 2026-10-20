@@ -1,3 +1,4 @@
+import qs
 import QtQuick
 import QtQuick.Layouts
 MouseArea {
@@ -15,34 +16,16 @@ MouseArea {
 
     RowLayout {
         id: row
-        spacing: 0
+        spacing: Theme.vitalsSpacing
         RowLayout {
-            spacing: 4
+            spacing: Theme.iconToValueSpacing
             BarText { text: root.volumeIcon }
-            BarText { text: Theme.bracketLeft; color: Audio.muted ? "#4e4e4e" : "white" }
             TapHandler { onTapped: Audio.toggleMute() }
         }        
 
         RowLayout {
-            spacing: 0
-            Repeater {
-                id: volumeBar
-                model : 20
-                BarText {
-                    required property int index
-                    readonly property bool countFilled: index < Math.round(Audio.volume / 5) 
-                    property string filled: "⣿"
-                    readonly property string empty: "⣉"
-                    text: countFilled ? filled : empty
-                    color: Audio.muted ? "#4e4e4e" : "white"
-                    }
-                }
-            }
-
-        RowLayout {
-            spacing: 2
-            BarText { text: Theme.bracketRight; color: Audio.muted ? "#4e4e4e" : "white"}
-            StableText { text: Audio.volume + "%"; widest: "100%" }
+            spacing: Theme.iconToValueSpacing
+            BarText { text: Audio.volume + "%"; opacity: Audio.muted ? 0.75 : 1}
         }
     }
 
