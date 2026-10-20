@@ -6,7 +6,6 @@ import Quickshell.Bluetooth
 import Quickshell.Networking
 import QtQuick
 import QtQuick.Layouts
-import QtQuick.Controls
 
 PanelWindow {
     id: root

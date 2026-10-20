@@ -1,6 +1,7 @@
 import qs
 import QtQuick
 import QtQuick.Layouts
+
 MouseArea {
     id:root
     implicitHeight: row.implicitHeight
