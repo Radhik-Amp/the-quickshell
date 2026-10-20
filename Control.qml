@@ -183,34 +183,17 @@ PanelWindow {
 
                         }
 
-                        Slider {
-                            Layout.fillWidth: true
-                            id: brightnessSlider
-                            from: 0
-                            to: Brightness.max
-                            stepSize: 5
 
-                            Binding on value {
-                                value: Brightness.value
-                                when: !brightnessSlider.pressed
-                            }
-
-                            onMoved: Brightness.set(Math.round(value))
+                        ControlBar {
+                            label: "Audio"
+                            value: Audio.volume
+                            onMoved: v => Audio.setVolume(v)
                         }
 
-                        Slider {
-                            Layout.fillWidth: true
-                            id: volumeSlider
-                            from: 0
-                            to: 100
-                            stepSize: 5
-
-                            Binding on value {
-                                value: Audio.volume
-                                when: !volumeSlider.pressed
-                            }
-
-                            onMoved: Audio.setVolume(Math.round(value))
+                        ControlBar {
+                            label: "Brightness"
+                            value: Brightness.value
+                            onMoved: v => Brightness.set(v)
                         }
                     }
                 }
