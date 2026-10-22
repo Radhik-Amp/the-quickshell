@@ -83,7 +83,8 @@ PanelWindow {
 
                     Rectangle {
                         Layout.preferredWidth: (root.implicitWidth - Theme.padding * 3) / 2 
-                        implicitHeight: content.implicitHeight + Theme.padding * 2
+                        //implicitHeight: content.implicitHeight + Theme.padding * 2
+                        Layout.fillHeight: true
                         color: "transparent"
                         radius: Theme.radius
                         border.color: Theme.borderColorMuted
@@ -102,14 +103,14 @@ PanelWindow {
                                 Layout.fillWidth: true
                                 horizontalAlignment: Text.AlignHCenter
                                 text: Qt.formatDateTime(clock.date, "hh:mm:ss AP")
-                                font.pixelSize: 26
+                                font.pixelSize: 32
                             }
 
                             BarText {
                                 Layout.fillWidth: true
                                 horizontalAlignment: Text.AlignHCenter
                                 text: Qt.formatDateTime(clock.date, "MMMM yyyy")
-                                font.pixelSize: 18
+                                font.pixelSize: 24
                                 color: Qt.rgba(1, 1, 1, 0.85)
                             }
 
@@ -193,6 +194,8 @@ PanelWindow {
                             value: Brightness.value
                             onMoved: v => Brightness.set(v)
                         }
+
+                        Power {}
                     }
                 }
             }

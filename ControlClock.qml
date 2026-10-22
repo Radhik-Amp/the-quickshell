@@ -24,6 +24,7 @@ ColumnLayout {
         columns: 7
         columnSpacing: 2
         Layout.fillWidth: true
+        Layout.fillHeight: true
 
         Repeater {
             model: ["[s]", "[m]", "[t]", "[w]", "[t]", "[f]", "[s]"]
@@ -47,7 +48,7 @@ ColumnLayout {
 
                 Layout.fillWidth: true
                 implicitWidth: digits.width + 4
-                implicitHeight: digits.height + 4
+                implicitHeight: digits.height + 8
                 color: hover.hovered && day > 0 ? Qt.rgba(0.28, 0.28, 0.28, 0.35) : "transparent"
                 radius: Theme.radius
 
