@@ -14,7 +14,6 @@ PanelWindow {
     anchors.top: true
     margins.top: Theme.padding + Theme.barHeight
     exclusionMode: ExclusionMode.Ignore
-//    exclusiveZone: 0
 
     implicitWidth: 540
     readonly property int tether: Theme.padding
@@ -83,7 +82,7 @@ PanelWindow {
                     spacing: Theme.padding
 
                     Rectangle {
-                        Layout.preferredWidth: (root.implicitWidth - Theme.padding * 2) / 2 
+                        Layout.preferredWidth: (root.implicitWidth - Theme.padding * 3) / 2 
                         implicitHeight: content.implicitHeight + Theme.padding * 2
                         color: "transparent"
                         radius: Theme.radius
@@ -116,7 +115,7 @@ PanelWindow {
 
                             ControlClock {
                                 Layout.fillWidth: true
-                                //Layout.preferredWidth: 190
+                                Layout.fillHeight: true
                             }
                         }
                     }
@@ -209,7 +208,7 @@ PanelWindow {
 
         Behavior on height {
             NumberAnimation {
-                duration: 750
+                duration: 650
                 easing.type: Easing.Bezier
                 easing.bezierCurve: [0.2, 0.8, 0.2, 1, 1, 1]
             }

@@ -65,7 +65,7 @@ Scope {
             Repeater {
                 model: server.trackedNotifications
 
-                delegate: Rectangle {
+                Rectangle {
                     id: card
                     required property var modelData
 
@@ -188,7 +188,7 @@ Scope {
                     spacing: Theme.padding
                     model: history
 
-                    delegate: Rectangle {
+                    Rectangle {
                         id: entry
                         required property int index
                         required property int notifId
