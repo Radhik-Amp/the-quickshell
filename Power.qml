@@ -34,10 +34,22 @@ Rectangle {
                 id: profileItem
 
                 readonly property bool active: PowerProfiles.profile === modelData.value
+                readonly property bool isFirst: index === 0
+                readonly property bool isLast: index === profiles.count - 1
 
                 Layout.fillWidth: true
                 implicitHeight: profileText.implicitHeight + Theme.padding
-                color: active ? "white" : "transparent"
+
+                topLeftRadius: isFirst ? root.radius : 0
+                bottomLeftRadius: isFirst ? root.radius : 0
+                topRightRadius: isLast ? root.radius : 0
+                bottomRightRadius: isLast ? root.radius : 0
+
+                border.width: root.border.width
+                border.color: root.border.color
+                color: mouse.containsMouse && !active ? Qt.rgba(0.28, 0.28, 0.28, 0.35)
+                     : active ? Theme.borderColor 
+                     : "transparent"
 
                 BarText {
                     id: profileText
@@ -46,7 +58,9 @@ Rectangle {
                     color: active ? Theme.background : "white"
                 }
                 MouseArea {
+                    id: mouse
                     anchors.fill: parent
+                    hoverEnabled: true
                     onClicked: PowerProfiles.profile = modelData.value
                 }
             }
