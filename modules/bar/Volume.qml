@@ -1,4 +1,4 @@
-import qs
+import qs.config
 import qs.services
 import qs.components
 import QtQuick

@@ -1,4 +1,4 @@
-import qs
+import qs.config
 import QtQuick
 
 Text {

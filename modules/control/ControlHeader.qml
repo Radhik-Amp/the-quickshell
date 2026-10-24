@@ -1,4 +1,3 @@
-import qs
 import qs.components
 import QtQuick
 import QtQuick.Layouts
