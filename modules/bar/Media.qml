@@ -1,4 +1,5 @@
 import qs
+import qs.components
 import Quickshell.Services.Mpris
 import QtQuick
 import QtQuick.Layouts
