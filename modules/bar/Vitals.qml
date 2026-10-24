@@ -1,6 +1,8 @@
 import qs
+import qs.services
 import QtQuick
 import QtQuick.Layouts
+
 RowLayout {
     spacing: Theme.vitalsSpacing
 
