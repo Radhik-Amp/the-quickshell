@@ -12,8 +12,6 @@ Rectangle {
     implicitHeight: content.implicitHeight
     color: "transparent"
     radius: Theme.radius
-    border.width: Theme.borderWidth
-    border.color: Theme.borderColorMuted
 
     RowLayout {
         id: content
@@ -46,9 +44,9 @@ Rectangle {
                 topRightRadius: isLast ? root.radius : 0
                 bottomRightRadius: isLast ? root.radius : 0
 
-                border.width: root.border.width
-                border.color: root.border.color
-                color: mouse.containsMouse && !active ? Qt.rgba(0.28, 0.28, 0.28, 0.35)
+                border.width: Theme.borderWidth
+                border.color: Theme.borderColorMuted
+                color: mouse.containsMouse && !active ? Theme.buttonColorHovered
                      : active ? Theme.borderColor 
                      : "transparent"
 
