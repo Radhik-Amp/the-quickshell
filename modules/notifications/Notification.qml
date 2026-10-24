@@ -12,33 +12,6 @@ Scope {
 
     property bool centerOpen: false
 
-    ListModel {
-        id: history
-    }
-    function dismissNotif(notifId: int): void {
-        const n = server.trackedNotifications.values.find(n => n.id === notifId)
-        if (n) n.dismiss();
-    }
-
-    NotificationServer {
-        id: server
-        actionsSupported: true
-        bodySupported: true
-        imageSupported: true
-        onNotification: n => {
-            history.insert(0, {
-                notifId: n.id,
-                summary: n.summary,
-                body: n.body,
-                appName: n.appName,
-                urgency: n.urgency,
-                time: Qt.formatDateTime(new Date(), "HH:mm")
-            })
-            if (ControlState.dnd && n.urgency !== NotificationUrgency.Critical) return
-            n.tracked = true
-        }
-    }
-
     IpcHandler {
         target: "notifications"
         function toggle(): void { root.centerOpen = !root.centerOpen }
@@ -65,7 +38,7 @@ Scope {
             spacing: Theme.padding
 
             Repeater {
-                model: server.trackedNotifications
+                model: Notifs.server.trackedNotifications
 
                 Rectangle {
                     id: card
@@ -172,12 +145,12 @@ Scope {
 
                     BarText {
                         text: "Clear all"
-                        visible: history.count > 0
+                        visible: Notifs.history.count > 0
                         color: "#E05252"
                         font.pixelSize: Theme.fontSize - 1
                         MouseArea {
                             anchors.fill: parent
-                            onClicked:  { for (const n of server.trackedNotifications.values.slice()) n.dismiss(); history.clear() }
+                            onClicked:  { for (const n of Notifs.server.trackedNotifications.values.slice()) n.dismiss(); Notifs.history.clear() }
                         }
                     }
                 }
@@ -185,10 +158,10 @@ Scope {
                 ListView {
                     Layout.fillWidth: true
                     Layout.preferredHeight: Math.min(contentHeight, 500)
-                    visible: history.count > 0
+                    visible: Notifs.history.count > 0
                     clip: true
                     spacing: Theme.padding
-                    model: history
+                    model: Notifs.history
 
                     Rectangle {
                         id: entry
@@ -249,7 +222,7 @@ Scope {
                                         anchors.fill: parent
                                         hoverEnabled: true
                                         cursorShape: Qt.PointingHandCursor
-                                        onClicked: { root.dismissNotif(entry.notifId); history.remove(entry.index) }
+                                        onClicked: { Notifs.dismissNotif(entry.notifId); Notifs.history.remove(entry.index) }
                                     }
 
                                 }
@@ -273,7 +246,7 @@ Scope {
                 }
 
                 BarText {
-                    visible: history.count === 0
+                    visible: Notifs.history.count === 0
                     text: "No notifications"
                     font.pixelSize: Theme.fontSize - 1
                 }
