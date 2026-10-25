@@ -285,7 +285,9 @@ PanelWindow {
                     }
                 }
 
+                ControlSession {}
             }
+
         }
         Rectangle {
             anchors.fill: parent
