@@ -9,6 +9,9 @@ Rectangle {
     property string label
     property list<string> command
 
+    property int holdDuration: 0
+    property real holdProgress: 0
+
     implicitHeight: sessionText.implicitHeight + Theme.padding * 2
 
     radius: Theme.radius
@@ -16,6 +19,20 @@ Rectangle {
     border.width: Theme.borderWidth
     border.color: Theme.borderColorMuted
 
+    function cancelHold() {
+        holdTimer.stop()
+        holdAnimation.stop()
+        holdProgress = 0
+    }
+
+    Rectangle {
+        anchors.left: parent.left
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        width: parent.width * root.holdProgress
+        radius: root.radius
+        color: Theme.borderColor
+    }
 
     BarText {
         id: sessionText
@@ -23,11 +40,32 @@ Rectangle {
         text: root.label
     }
 
+    NumberAnimation {
+        id: holdAnimation
+        target: root
+        property: "holdProgress"
+        from: 0
+        to: 1
+        duration: holdDuration
+    }
+
+    Timer {
+        id: holdTimer
+        interval: root.holdDuration
+        onTriggered: {
+            root.holdProgress = 0
+            Quickshell.execDetached(root.command)
+        }
+    }
+
     MouseArea {
         id: mouse
         anchors.fill: parent
         hoverEnabled: true
         cursorShape: Qt.PointingHandCursor
-        onClicked: Quickshell.execDetached(root.command)
+        onClicked: if (root.holdDuration == 0) Quickshell.execDetached(root.command)
+        onPressed: if (root.holdDuration > 0) { holdTimer.start(); holdAnimation.start() }
+        onReleased: root.cancelHold()
+        onCanceled: root.cancelHold()
     }
 }

@@ -203,6 +203,7 @@ PanelWindow {
                 }
 
                 Rectangle {
+                    visible: Notifs.history.count !== 0
                     Layout.fillWidth: true
                     implicitHeight: 1
                     color: Qt.rgba(1, 1, 1, 0.5)
@@ -273,16 +274,8 @@ PanelWindow {
 
                 Rectangle {
                     Layout.fillWidth: true
-                    implicitHeight: text.implicitHeight
-                    color: "transparent"
-
-                    BarText {
-                        id: text
-                        visible: Notifs.history.count === 0
-                        anchors.centerIn: parent
-                        text: "No notifications"
-                        font.pixelSize: Theme.fontSize - 1
-                    }
+                    implicitHeight: 1
+                    color: Qt.rgba(1, 1, 1, 0.5)
                 }
 
                 ControlSession {}
