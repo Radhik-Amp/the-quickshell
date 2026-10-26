@@ -32,7 +32,7 @@ RowLayout {
                         : Theme.tagBorderEmpty
             color: active ? Theme.tagActive
                  : urgent ? Theme.tagUrgent
-                 : mouse.containsMouse ? Theme.tagHover
+                 : hover.hovered ? Theme.tagHover
                  : "transparent"
 
             BarText {
@@ -40,11 +40,13 @@ RowLayout {
                 text: tag.number
             }
 
-            MouseArea {
-                id: mouse
-                anchors.fill: parent
-                hoverEnabled: true
-                onClicked: Mango.viewTag(tag.number)
+            HoverHandler {
+                id: hover
+                cursorShape: Qt.PointingHandCursor
+            }
+
+            TapHandler {
+                onTapped: Mango.viewTag(tag.number) 
             }
         }
     }

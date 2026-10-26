@@ -55,27 +55,18 @@ RowLayout {
         onTextChanged: {rowOffset = 0; if (animation.running) animation.restart() }
 
     }
-    BarText {
+    IconButton {
         text: Theme.iconPrevious
-        MouseArea {
-            anchors.fill: parent
-            onClicked: root.player.previous()
-        }
+        onClicked: root.player?.previous()
     }
-    BarText {
-        text: root.player.isPlaying ? Theme.iconPause : Theme.iconPlay
-        MouseArea {
-            anchors.fill: parent
-            onClicked: root.player.togglePlaying()
-        }
+
+    IconButton {
+        text: root.player?.isPlaying ? Theme.iconPause : Theme.iconPlay
+        onClicked: root.player.togglePlaying()
     }
-    BarText {
+
+    IconButton {
         text: Theme.iconNext
-        MouseArea {
-            anchors.fill: parent
-            onClicked: root.player.next()
-        }
+        onClicked: root.player?.next()
     }
-
-
 }

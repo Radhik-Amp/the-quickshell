@@ -36,7 +36,7 @@ Rectangle {
     Behavior on scale { NumberAnimation { duration: 80 } }
     
 
-    HoverHandler { id: hover }
+    HoverHandler { id: hover; cursorShape: Qt.PointingHandCursor }
     TapHandler {
         id: tap
         onTapped: root.clicked()

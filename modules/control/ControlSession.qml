@@ -35,7 +35,7 @@ RowLayout {
         SessionButton {
             label: "\u{F011}"
             command: ["systemctl", "poweroff"]
-            holdDuration: 5000
+            holdDuration: 3000
             Layout.preferredWidth: 150
         }
 

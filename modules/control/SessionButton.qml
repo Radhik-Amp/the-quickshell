@@ -15,7 +15,7 @@ Rectangle {
     implicitHeight: sessionText.implicitHeight + Theme.padding * 2
 
     radius: Theme.radius
-    color: mouse.containsMouse ? Theme.buttonColorHovered : "transparent"
+    color: hover.hovered ? Theme.buttonColorHovered : "transparent"
     border.width: Theme.borderWidth
     border.color: Theme.borderColorMuted
 
@@ -58,14 +58,18 @@ Rectangle {
         }
     }
 
-    MouseArea {
-        id: mouse
-        anchors.fill: parent
-        hoverEnabled: true
+    HoverHandler {
+        id: hover
         cursorShape: Qt.PointingHandCursor
-        onClicked: if (root.holdDuration == 0) Quickshell.execDetached(root.command)
-        onPressed: if (root.holdDuration > 0) { holdTimer.start(); holdAnimation.start() }
-        onReleased: root.cancelHold()
-        onCanceled: root.cancelHold()
+    }
+
+    TapHandler {
+        gesturePolicy: TapHandler.WithinBounds
+        onPressedChanged: {
+            if (root.holdDuration === 0) return
+            if (pressed) { holdTimer.start(); holdAnimation.start() }
+            else root.cancelHold()
+        }
+        onTapped: if (root.holdDuration === 0) Quickshell.execDetached(root.command)
     }
 }

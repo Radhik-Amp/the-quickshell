@@ -233,7 +233,7 @@ PanelWindow {
                             radius: Theme.radius
                             color: "transparent"
                             border.width: Theme.borderWidth
-                            border.color: urgency === NotificationUrgency.critical ? "#E05252" : Theme.borderColorMuted
+                            border.color: urgency === NotificationUrgency.Critical ? "#E05252" : Theme.borderColorMuted
 
                             ColumnLayout {
                                 id: notifCol

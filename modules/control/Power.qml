@@ -46,7 +46,7 @@ Rectangle {
 
                 border.width: Theme.borderWidth
                 border.color: Theme.borderColorMuted
-                color: mouse.containsMouse && !active ? Theme.buttonColorHovered
+                color: hover.hovered && !active ? Theme.buttonColorHovered
                      : active ? Theme.borderColor 
                      : "transparent"
 
@@ -56,11 +56,14 @@ Rectangle {
                     text: modelData.label
                     color: active ? Theme.background : "white"
                 }
-                MouseArea {
-                    id: mouse
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    onClicked: PowerProfiles.profile = modelData.value
+
+                HoverHandler {
+                    id: hover
+                    cursorShape: !profileItem.active ? Qt.PointingHandCursor : undefined
+                }
+
+                TapHandler {
+                    onTapped: PowerProfiles.profile = modelData.value
                 }
             }
         }

@@ -99,9 +99,8 @@ Scope {
                         }
                     }
 
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: card.modelData.dismiss()
+                    TapHandler {
+                        onTapped: card.modelData.dismiss()
                     }
                 }
             }
@@ -148,9 +147,9 @@ Scope {
                         visible: Notifs.history.count > 0
                         color: "#E05252"
                         font.pixelSize: Theme.fontSize - 1
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked:  { for (const n of Notifs.server.trackedNotifications.values.slice()) n.dismiss(); Notifs.history.clear() }
+                        HoverHandler { cursorShape: Qt.PointingHandCursor }
+                        TapHandler {
+                            onTapped: { for (const n of Notifs.server.trackedNotifications.values.slice()) n.dismiss(); Notifs.history.clear() }
                         }
                     }
                 }
@@ -163,7 +162,7 @@ Scope {
                     spacing: Theme.padding
                     model: Notifs.history
 
-                    Rectangle {
+                    delegate: Rectangle {
                         id: entry
                         required property int index
                         required property int notifId
@@ -215,14 +214,11 @@ Scope {
                                         anchors.centerIn: parent
                                         text: "\u{F0156}"
                                         font.pixelSize: Theme.fontSize - 2
-                                        color: mouseClose.containsMouse ? "#E05252" : "white"
+                                        color: hover.hovered ? "#E05252" : "white"
                                     }
-                                    MouseArea {
-                                        id: mouseClose
-                                        anchors.fill: parent
-                                        hoverEnabled: true
-                                        cursorShape: Qt.PointingHandCursor
-                                        onClicked: { Notifs.dismissNotif(entry.notifId); Notifs.history.remove(entry.index) }
+                                    HoverHandler { id: hover; cursorShape: Qt.PointingHandCursor }
+                                    TapHandler {
+                                        onTapped: { Notifs.dismissNotif(entry.notifId); Notifs.history.remove(entry.index) }
                                     }
 
                                 }

@@ -16,6 +16,9 @@ BarText {
         precision: SystemClock.Minutes
     }
 
+    HoverHandler {
+        cursorShape: Qt.PointingHandCursor
+    }
     TapHandler {
         acceptedButtons: Qt.LeftButton
         onTapped: root.showDate = !root.showDate
