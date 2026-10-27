@@ -23,6 +23,8 @@ WlSessionLock {
 
     WlSessionLockSurface {
         id: surface
+        // lock surfaces are opaque; without this the fades go to/from white
+        color: "black"
 
         Rectangle {
             id: mainContainer
@@ -197,14 +199,6 @@ WlSessionLock {
                     if (LockScreenState.authFailed) {
                         shakeAnime.start()
                         pwField.text = ""
-                        pwField.forceActiveFocus()
-                    }
-                }
-
-                function onLockedChanged() {
-                    if (!LockScreenState.locked) {
-                        pwField.text = ""
-                    } else {
                         pwField.forceActiveFocus()
                     }
                 }

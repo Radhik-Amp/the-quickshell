@@ -24,8 +24,9 @@ Singleton {
 
     function unlock() {
         authFailed = false
-        unlocking = false
+        // release the lock before clearing unlocking, so the surface doesn't start fading back in
         root.locked = false
+        unlocking = false
     }
 
     function authenticate(password) {
@@ -55,6 +56,7 @@ Singleton {
         property string pending: ""
 
         onCompleted: (result) => {
+            pending = ""
             if (result === PamResult.Success) {
                 root.unlocking = true
             } else {
@@ -62,6 +64,7 @@ Singleton {
             }
         } 
         onError: (error) => {
+            pending = ""
             root.authFailed = true
         }
 
