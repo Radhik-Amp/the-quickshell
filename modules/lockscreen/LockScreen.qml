@@ -105,15 +105,14 @@ WlSessionLock {
                     NumberAnimation { target: card; property: "animOffsetX"; to: 0; duration: 50; easing.type: Easing.OutQuad }
                 }
 
-                Column {
+                ColumnLayout {
                     id: contentColumn
                     width: parent.width
-                    anchors.horizontalCenter: parent.horizontalCenter
                     spacing: 4
 
                     BarText {
                         id: clockText
-                        anchors.horizontalCenter: parent.horizontalCenter
+                        Layout.alignment: Qt.AlignHCenter
 
                         property date currentTime: new Date()
 
@@ -129,17 +128,17 @@ WlSessionLock {
                     }
 
                     BarText {
-                        anchors.horizontalCenter: parent.horizontalCenter
+                        Layout.alignment: Qt.AlignHCenter
                         text: Qt.formatDate(clockText.currentTime, "dddd, MMMM d")
                         color: Qt.rgba(1, 1, 1, 0.75)
                     }
 
-                    Item { height: 12; width: 1}
+                    Item { Layout.preferredHeight: 12 }
 
                     Rectangle {
                         id: fieldWrap
-                        width: parent.width
-                        height: 50
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: 50
                         radius: 5
                         color: Qt.rgba(0, 0, 0, 0.5)
                         border.width: 1
@@ -189,7 +188,7 @@ WlSessionLock {
                     } 
 
                     BarText {
-                        anchors.horizontalCenter: parent.horizontalCenter
+                        Layout.alignment: Qt.AlignHCenter
                         text: LockScreenState.message
                         color: "#E05252"
                         font.pixelSize: 13
@@ -197,6 +196,8 @@ WlSessionLock {
 
                         Behavior on opacity { NumberAnimation { duration: 200; easing.type: Easing.InOutSine } }
                     }
+
+                   LockSession {} 
                 }
             }
 
