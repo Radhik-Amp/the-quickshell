@@ -23,7 +23,6 @@ WlSessionLock {
 
     WlSessionLockSurface {
         id: surface
-        // lock surfaces are opaque; without this the fades go to/from white
         color: "black"
 
         Rectangle {
@@ -37,7 +36,7 @@ WlSessionLock {
             opacity: visibleState ? 1 : 0
             Behavior on opacity {
                 NumberAnimation {
-                    duration: 350
+                    duration: 250
                     easing.type: Easing.OutCubic
 
                 }
@@ -144,9 +143,17 @@ WlSessionLock {
                         radius: 5
                         color: Qt.rgba(0, 0, 0, 0.5)
                         border.width: 1
-                        border.color: LockScreenState.authFailed ? "#E05252" : "white"
+                        border.color: showError ? "#E05252" : "white"
+
+                        property bool showError: false
 
                         Behavior on border.color { ColorAnimation { duration: 200 } }
+
+                        Timer {
+                            id: borderReset
+                            interval: 350
+                            onTriggered: fieldWrap.showError = false
+                        }
 
                         RowLayout {
                             anchors.fill: parent
@@ -183,7 +190,7 @@ WlSessionLock {
 
                     BarText {
                         anchors.horizontalCenter: parent.horizontalCenter
-                        text: "Incorrect password"
+                        text: LockScreenState.message
                         color: "#E05252"
                         font.pixelSize: 13
                         opacity: LockScreenState.authFailed ? 1 : 0
@@ -198,6 +205,8 @@ WlSessionLock {
                 function onAuthFailedChanged() {
                     if (LockScreenState.authFailed) {
                         shakeAnime.start()
+                        fieldWrap.showError = true
+                        borderReset.restart()
                         pwField.text = ""
                         pwField.forceActiveFocus()
                     }

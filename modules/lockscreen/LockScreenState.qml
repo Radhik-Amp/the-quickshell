@@ -11,8 +11,8 @@ Singleton {
     property bool locked: false
     property bool authenticating: pam.active
     property bool authFailed: false
-    // set on successful auth; LockScreen plays the fade-out, then calls unlock()
     property bool unlocking: false
+    property string message: ""
 
     function lock() {
         if (!root.locked) {
@@ -24,7 +24,6 @@ Singleton {
 
     function unlock() {
         authFailed = false
-        // release the lock before clearing unlocking, so the surface doesn't start fading back in
         root.locked = false
         unlocking = false
     }
@@ -32,12 +31,11 @@ Singleton {
     function authenticate(password) {
         if (pam.active || unlocking) return
         authFailed = false
+        pam.gotMessage = false
         pam.pending = password
         pam.start()
     }
 
-    // let the fade-out finish before the session lock is released
-    // (must live here: WlSessionLock's default property is `surface`, so children there are dropped)
     Timer {
         interval: 350
         running: root.unlocking
@@ -54,17 +52,20 @@ Singleton {
         id: pam
         config: "login"
         property string pending: ""
+        property bool gotMessage: false
 
         onCompleted: (result) => {
             pending = ""
             if (result === PamResult.Success) {
                 root.unlocking = true
             } else {
+                if (!gotMessage) root.message = "Incorrect password"
                 root.authFailed = true
             }
         } 
         onError: (error) => {
             pending = ""
+            if (!gotMessage) root.message = "Authentication error"
             root.authFailed = true
         }
 
@@ -72,7 +73,10 @@ Singleton {
             if (responseRequired) {
                 respond(pending)
                 pending = ""
-            } 
+            } else if (message) {
+                root.message = message
+                gotMessage = true
+            }
         }
     }
 }
