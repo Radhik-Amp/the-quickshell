@@ -21,6 +21,13 @@ WlSessionLock {
         }
     }
 
+    onSecureChanged: {
+        if (secure && LockScreenState.suspendPending) {
+            LockScreenState.suspendPending = false
+            Quickshell.execDetached(["systemctl", "suspend"])
+        }
+    }
+
     WlSessionLockSurface {
         id: surface
         color: "black"

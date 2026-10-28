@@ -16,7 +16,7 @@ RowLayout {
         Repeater {
             model: [
                 { label: "\u{F023}", command: ["qs", "ipc", "call", "lockscreen", "lock"] },   
-                { label: "\u{F0904}", command: ["systemctl", "suspend"] },   
+                { label: "\u{F0904}", action: ["qs", "ipc", "call", "lockscreen", "lockAndSuspend" ] },   
                 { label: "\u{F021}", command: ["systemctl", "reboot"] }   
             ]
         

@@ -173,14 +173,12 @@ PanelWindow {
                             }
 
                             ControlToggle {
-                                property bool fake: false
-
                                 Layout.fillWidth: true
                                 icon: "\u{F0176}"
                                 label: "caffiene"
-                                status: fake ? "on" : "off"
-                                active: fake
-                                onClicked: fake = !fake
+                                status: Idle.caffiene ? "on" : "off"
+                                active: Idle.caffiene
+                                onClicked: Idle.caffiene = !Idle.caffiene
                             }
 
                         }

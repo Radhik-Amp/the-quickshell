@@ -13,6 +13,17 @@ Singleton {
     property bool authFailed: false
     property bool unlocking: false
     property string message: ""
+    property bool suspendPending: false
+
+    function lockAndSuspend() {
+        console.warn("lock and suspend called")
+        if (root.locked) {
+            Quickshell.execDetached(["systemctl", "suspend"])
+            return
+        }
+        suspendPending = true
+        lock()
+    }
 
     function lock() {
         if (!root.locked) {
@@ -46,6 +57,7 @@ Singleton {
         target: "lockscreen"
         function lock(): void { root.lock() }
         function isLocked(): bool { return root.locked }
+        function lockAndSuspend(): void { root.lockAndSuspend() }
     }
 
     PamContext {

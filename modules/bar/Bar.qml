@@ -1,9 +1,18 @@
 import qs.config
+import qs.services
 import Quickshell
+import Quickshell.Wayland
 import QtQuick
 import QtQuick.Layouts
 
 PanelWindow {
+    id: root
+
+    IdleInhibitor {
+        window: root
+        enabled: Idle.caffiene
+    }
+
     anchors {
         top: true
         left: true
