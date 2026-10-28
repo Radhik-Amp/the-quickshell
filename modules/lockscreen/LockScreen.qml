@@ -54,7 +54,7 @@ WlSessionLock {
                 anchors.fill: parent
                 source: {
                     const path = Wallpaper.paths[surface.screen?.name]
-                    return path ? "file://" + path : ""
+                    return path ? "file://" + encodeURI(path) : ""
                 }
                 fillMode: Image.PreserveAspectCrop
                 smooth: true
@@ -81,7 +81,7 @@ WlSessionLock {
             Rectangle {
                 anchors.fill: parent
                 color: "#000000"
-                opacity: 0.85
+                opacity: 0.65
             }
 
             Item {
