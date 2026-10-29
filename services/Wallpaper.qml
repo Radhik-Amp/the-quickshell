@@ -7,7 +7,31 @@ import QtQuick
 Singleton {
     id: root
 
-    property var paths: ({})
+    property var currentPaths: ({})
+    property var entries: []
+    property var currentDirectory: Quickshell.env("HOME") + "/wallpapers"
+    readonly property var extensions: ["jpeg", "jpg", "png", "webp", "gif"]
+
+    property bool shown: false
+
+    IpcHandler {
+        target: "wallpaper"
+        function set(path: string): void { root.set(path) }
+        function toggle(): void { root.toggle() }
+    }
+
+    function set(path: string) {
+        setter.command = ["awww", "img", path,
+                          "--transition-type", "center",
+                          "--transition-duration", "0.6",
+                          "--transition-bezier", "0.22,1,0.36,1",
+                          "--transition-fps", "144"]
+        setter.running = true
+    }
+
+    function toggle() {
+        root.shown = !root.shown
+    }
 
     Process {
         id: query
@@ -29,12 +53,39 @@ Singleton {
                     newPaths[m[1]] = line.slice(i + marker.length).trim()
                 }
 
-                root.paths = newPaths
+                root.currentPaths = newPaths
             }
         }
     }
 
+    Process {
+        id: listDirectory
+        command: ["find", "-L", root.currentDirectory, "-mindepth", "1", "-maxdepth", "1", "-type", "f", "-printf", "%P\\n"]
+        stdout: StdioCollector {
+            onStreamFinished: {
+                const newEntries = []
+                for (const line of text.split("\n")) {
+                    const dot = line.lastIndexOf(".")
+                    const ext = dot === -1 ? "" : line.slice(dot + 1).toLowerCase()
+
+                    if (!line) continue
+                    if (line[0] === ".") continue
+                    if (!root.extensions.includes(ext)) continue
+
+                    newEntries.push(root.currentDirectory + "/" + line)
+                }
+                newEntries.sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
+                root.entries = newEntries
+            }
+        }
+    }
+
+    Process { id: setter; onExited: query.running = true}
+
+    Component.onCompleted: refresh()
+
     function refresh() {
+        listDirectory.running = true
         query.running = true
     }
 }
