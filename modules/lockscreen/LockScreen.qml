@@ -53,7 +53,7 @@ WlSessionLock {
                 id: wallpaper
                 anchors.fill: parent
                 source: {
-                    const path = Wallpaper.paths[surface.screen?.name]
+                    const path = Wallpaper.currentPaths[surface.screen?.name]
                     return path ? "file://" + encodeURI(path) : ""
                 }
                 fillMode: Image.PreserveAspectCrop
