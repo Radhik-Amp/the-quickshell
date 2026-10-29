@@ -9,8 +9,8 @@ Singleton {
 
     property bool caffiene: false
 
-    property int lockTimeout: 300
-    property int screenOffTimeout: 600
+    property int lockTimeout: 600
+    property int screenOffTimeout: 900
     property var suspendCmd: ["systemctl", "suspend"]
 
     IdleMonitor {
