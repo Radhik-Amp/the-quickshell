@@ -25,6 +25,6 @@ RowLayout {
         spacing: Theme.iconToValueSpacing
 
         BarText { text: Theme.iconCpu }
-        StableText { text: Stats.cpuUsage + "%"; widest: "100%"}
+        StableText { text: Stats.cpuUsage + "%"; widest: "99%"}
     }
 }    

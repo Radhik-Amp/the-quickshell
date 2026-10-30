@@ -1,4 +1,5 @@
 import qs.config
+import qs.components
 import qs.services
 import Quickshell
 import Quickshell.Wayland
@@ -57,6 +58,12 @@ PanelWindow {
 
             Volume {}
             Vitals {}
+
+            BarText {
+                text: "\u{F02F9}"
+                HoverHandler { cursorShape: Qt.PointingHandCursor }
+                TapHandler { onTapped: Wallpaper.toggle() }
+            }
         }
     }
 }

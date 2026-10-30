@@ -7,13 +7,14 @@ import Quickshell
 import Quickshell.Wayland
 import Quickshell.Widgets
 import QtQuick
+import QtQuick.Layouts
 
 PanelWindow {
     id: root
     
     readonly property bool shown: Wallpaper.shown
 
-    exclusionMode: ExclusionMode.Normal
+    exclusionMode: ExclusionMode.Ignore
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.keyboardFocus: shown ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
 
@@ -38,55 +39,70 @@ PanelWindow {
         id: pickerPanel
         
         readonly property int rows: 4
-
+        
         anchors.centerIn: parent
         width: Math.min(parent.width * 0.6, 1400)
-        height: rows * grid.cellHeight + 2 * Theme.padding
+        height: contentColumn.implicitHeight + 2 * Theme.padding
 
         color: Theme.background
         radius: Theme.radius
         border.width: Theme.borderWidth
         border.color: Theme.borderColor
+        focus: true
+        Keys.onEscapePressed: Wallpaper.shown = false
 
-        GridView {
-            id: grid
-            model: Wallpaper.entries
+        TapHandler { gesturePolicy: TapHandler.ReleaseWithinBounds }
+
+        ColumnLayout {
+            id: contentColumn
             anchors.fill: parent
-            anchors.margins: Theme.padding 
-            clip: true
+            anchors.margins: Theme.padding
+            spacing: Theme.padding
+            BarText {
+                Layout.fillWidth: true
+                horizontalAlignment: Text.AlignHCenter
+                elide: Text.ElideMiddle
+                text: "\u{F024B} " + Wallpaper.currentDirectory.replace(Quickshell.env("HOME"), "~")
+            }
 
-            cellWidth: width / 3
-            cellHeight: cellWidth * (root.screen.height / root.screen.width)
+            Rectangle {
+                implicitHeight: 1
+                Layout.fillWidth: true
+                color: Theme.borderColorMuted
+            }
 
-            delegate: Item {
-                id: contentItem
-                required property string modelData
-                required property int index
-                width: grid.cellWidth
-                height: grid.cellHeight
+            GridView {
+                id: grid
+                model: Wallpaper.entries
+                Layout.fillWidth: true
+                Layout.preferredHeight: Math.min(pickerPanel.rows, Math.ceil(count / 3)) * cellHeight
+                clip: true
 
-                ClippingRectangle {
-                    id: contentRect
-                    anchors.fill: parent
-                    anchors.margins: Theme.padding / 2
-                    radius: Theme.radius
-                    width: parent.width
-                    height: parent.height
+                cellWidth: width / 3
+                cellHeight: cellWidth * (root.screen.height / root.screen.width)
 
-                    Image {
+                delegate: Item {
+                    id: contentItem
+                    required property string modelData
+                    width: grid.cellWidth
+                    height: grid.cellHeight
+
+                    ClippingRectangle {
+                        id: contentRect
                         anchors.fill: parent
-                        source: "file://" + contentItem.modelData
-                        sourceSize: Qt.size(480, 270)
-                        asynchronous: true
-                        fillMode: Image.PreserveAspectCrop
-                    }
-
-                    Rectangle {
-                        anchors.fill: parent
+                        anchors.margins: Theme.padding
+                        radius: Theme.radius
                         color: "transparent"
-                        radius: parent.radius
                         border.width: Theme.borderWidth
                         border.color: Object.values(Wallpaper.currentPaths).includes(contentItem.modelData) ? Theme.borderColor : Theme.borderColorMuted
+
+                        Image {
+                            anchors.fill: parent
+                            source: "file://" + contentItem.modelData
+                            sourceSize: Qt.size(480, 270)
+                            asynchronous: true
+                            fillMode: Image.PreserveAspectCrop
+                        }
 
                         HoverHandler {
                             id: gridHover
@@ -94,12 +110,10 @@ PanelWindow {
                         }
 
                         TapHandler {
-                            onTapped: if (contentItem.modelData !== Wallpaper.currentPaths) Wallpaper.set(contentItem.modelData) 
+                            onTapped: if (!Object.values(Wallpaper.currentPaths).includes(contentItem.modelData)) Wallpaper.set(contentItem.modelData) 
                         }
                     }
                 }
-
-
             }
         }
     }
