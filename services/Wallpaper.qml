@@ -13,11 +13,17 @@ Singleton {
     readonly property var extensions: ["jpeg", "jpg", "png", "webp", "gif"]
 
     property bool shown: false
+    property int queryAttempts: 0
 
     IpcHandler {
         target: "wallpaper"
         function set(path: string): void { root.set(path) }
         function toggle(): void { root.toggle() }
+    }
+
+    function refresh() {
+        listDirectory.running = true
+        query.running = true
     }
 
     function set(path: string) {
@@ -54,6 +60,10 @@ Singleton {
                 }
 
                 root.currentPaths = newPaths
+                if (Object.keys(newPaths).length === 0 && root.queryAttempts < 10)
+                    retryTimer.restart()
+                else
+                    root.queryAttempts = 0
             }
         }
     }
@@ -84,8 +94,13 @@ Singleton {
 
     Component.onCompleted: refresh()
 
-    function refresh() {
-        listDirectory.running = true
-        query.running = true
+    Timer {
+        id: retryTimer
+        interval: 500
+        onTriggered: {
+            root.queryAttempts++
+            query.running = true
+        }
     }
 }
+
