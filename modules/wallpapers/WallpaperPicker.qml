@@ -90,7 +90,7 @@ PanelWindow {
                     ClippingRectangle {
                         id: contentRect
                         anchors.fill: parent
-                        anchors.margins: Theme.padding
+                        anchors.margins: Theme.padding / 2
                         radius: Theme.radius
                         color: "transparent"
                         border.width: Theme.borderWidth
