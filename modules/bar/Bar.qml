@@ -11,7 +11,7 @@ PanelWindow {
 
     IdleInhibitor {
         window: root
-        enabled: Idle.caffiene
+        enabled: Idle.caffeine
     }
 
     anchors {

@@ -175,10 +175,10 @@ PanelWindow {
                             ControlToggle {
                                 Layout.fillWidth: true
                                 icon: "\u{F0176}"
-                                label: "caffiene"
-                                status: Idle.caffiene ? "on" : "off"
-                                active: Idle.caffiene
-                                onClicked: Idle.caffiene = !Idle.caffiene
+                                label: "caffeinated"
+                                status: Idle.caffeine ? "on" : "off"
+                                active: Idle.caffeine
+                                onClicked: Idle.caffiene = !Idle.caffeine
                             }
 
                         }

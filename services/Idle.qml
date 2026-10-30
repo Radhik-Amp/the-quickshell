@@ -7,7 +7,7 @@ import QtQuick
 Singleton {
     id: root
 
-    property bool caffiene: false
+    property bool caffeine: false
 
     property int lockTimeout: 600
     property int screenOffTimeout: 900
