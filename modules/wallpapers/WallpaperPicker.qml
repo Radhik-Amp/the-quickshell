@@ -79,7 +79,7 @@ PanelWindow {
                 clip: true
 
                 cellWidth: width / 3
-                cellHeight: cellWidth * (root.screen.height / root.screen.width)
+                cellHeight: Math.floor(cellWidth * (root.screen.height / root.screen.width))
 
                 delegate: Item {
                     id: contentItem
