@@ -6,9 +6,8 @@ import QtQuick.Layouts
 
 RowLayout {
     id: root
-    property int activeTag: 1
 
-    spacing: 6
+    spacing: Theme.spaceSm
 
     Repeater {
         model: 9

@@ -37,32 +37,56 @@ PanelWindow {
         border.color: Theme.borderColor
 
         RowLayout {
-            anchors.left: parent.left
-            anchors.leftMargin: Theme.padding
-            anchors.verticalCenter: parent.verticalCenter
-            spacing: Theme.barSpacing
+            anchors.fill: parent
+            anchors.leftMargin: Theme.barInset
+            anchors.rightMargin: Theme.barInset
+            spacing: Theme.spaceMd
 
-            Tags {}
-            Media {}
-        }
+            Item {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                Layout.horizontalStretchFactor: 1
+                clip: true
 
-        Clock {
-            anchors.centerIn: parent
-        }
+                RowLayout {
+                    anchors.left: parent.left
+                    anchors.verticalCenter: parent.verticalCenter
+                    spacing: Theme.spaceSm
 
-        RowLayout {
-            anchors.right: parent.right
-            anchors.rightMargin: Theme.padding
-            anchors.verticalCenter: parent.verticalCenter
-            spacing: Theme.barSpacing
+                    IconButton {
+                        text: "\u{F02F9}"
+                        onClicked: Wallpaper.toggle()
+                    }
 
-            Volume {}
-            Vitals {}
+                    Tags {}
+                }
+            }
 
-            BarText {
-                text: "\u{F02F9}"
-                HoverHandler { cursorShape: Qt.PointingHandCursor }
-                TapHandler { onTapped: Wallpaper.toggle() }
+            Clock {}
+
+            Item {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                Layout.horizontalStretchFactor: 1
+                clip: true
+
+                RowLayout {
+                    anchors.right: parent.right
+                    // Matches the left end, where the first glyph sits inside a button's padding
+                    anchors.rightMargin: Theme.spaceXs
+                    anchors.verticalCenter: parent.verticalCenter
+                    spacing: Theme.spaceMd
+
+                    Media {}
+
+                    RowLayout {
+                        spacing: Theme.spaceStat
+
+                        Volume {}
+                        Vitals {}
+                    }
+
+                }
             }
         }
     }

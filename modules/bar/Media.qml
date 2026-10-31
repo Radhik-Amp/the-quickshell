@@ -2,6 +2,7 @@ import qs.config
 import qs.components
 import Quickshell.Services.Mpris
 import QtQuick
+import QtQuick.Effects
 import QtQuick.Layouts
 
 RowLayout {
@@ -12,9 +13,28 @@ RowLayout {
         ?? players.find(p => p.identity.toLowerCase().includes("spotify"))
         ?? players[0]
 
-    spacing: Theme.padding
+    spacing: Theme.spaceSm
 
-   
+    // Buttons sit flush: the boxes' own padding is enough of a gap
+    RowLayout {
+        spacing: 0
+
+        IconButton {
+            text: Theme.iconPrevious
+            onClicked: root.player?.previous()
+        }
+
+        IconButton {
+            text: root.player?.isPlaying ? Theme.iconPause : Theme.iconPlay
+            onClicked: root.player.togglePlaying()
+        }
+
+        IconButton {
+            text: Theme.iconNext
+            onClicked: root.player?.next()
+        }
+    }
+
     Item {
         id: ticker
         clip: true
@@ -24,12 +44,38 @@ RowLayout {
         property string text: root.player ? `${root.player.trackArtist} — ${root.player.trackTitle}` : "Nothing playing"
         property int speed: 40
         property int gap: 30
+        property int fade: Theme.spaceMd
         property real rowOffset: 0
+
+        // Soften the clipped edges while scrolling instead of cutting glyphs off
+        layer.enabled: overflowing
+        layer.effect: MultiEffect {
+            maskEnabled: true
+            maskSource: tickerMask
+            maskThresholdMin: 0.5
+            maskSpreadAtMin: 1.0
+        }
+
+        Rectangle {
+            id: tickerMask
+            anchors.fill: parent
+            visible: false
+            layer.enabled: true
+            gradient: Gradient {
+                orientation: Gradient.Horizontal
+                // Left edge only fades while scrolling; a paused title starts crisp
+                GradientStop { position: 0; color: animation.running ? "transparent" : "white" }
+                GradientStop { position: ticker.fade / ticker.width; color: "white" }
+                GradientStop { position: 1 - ticker.fade / ticker.width; color: "white" }
+                GradientStop { position: 1; color: "transparent" }
+            }
+        }
+
         RowLayout {
             id: row
-            spacing: 30
+            spacing: ticker.gap
             anchors.verticalCenter: parent.verticalCenter
-            x: ticker.overflowing ? ticker.rowOffset : (ticker.width - tickerText.implicitWidth) / 2
+            x: ticker.overflowing ? ticker.rowOffset : 0
 
             BarText {
                 id: tickerText
@@ -54,19 +100,5 @@ RowLayout {
         }
         onTextChanged: {rowOffset = 0; if (animation.running) animation.restart() }
 
-    }
-    IconButton {
-        text: Theme.iconPrevious
-        onClicked: root.player?.previous()
-    }
-
-    IconButton {
-        text: root.player?.isPlaying ? Theme.iconPause : Theme.iconPlay
-        onClicked: root.player.togglePlaying()
-    }
-
-    IconButton {
-        text: Theme.iconNext
-        onClicked: root.player?.next()
     }
 }

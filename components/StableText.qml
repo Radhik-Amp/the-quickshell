@@ -3,14 +3,16 @@ import QtQuick.Layouts
 
 BarText {
     id: root
-    required property string widest
 
-    Layout.minimumWidth: metrics.width
+    required property var widest
 
-    TextMetrics {
+    Layout.minimumWidth: {
+        metrics.font
+        return Math.max(...[].concat(root.widest).map(s => Math.ceil(metrics.boundingRect(s).width)))
+    }
+
+    FontMetrics {
         id: metrics
         font: root.font
-        text: root.widest
-
     }
 }

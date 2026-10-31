@@ -7,10 +7,8 @@ Singleton {
     readonly property color background: Qt.rgba(0, 0, 0, 0.85)
     readonly property color borderColor: Qt.rgba(1, 1, 1, 0.85)
     readonly property color borderColorMuted: Qt.rgba(1, 1, 1, 0.25)
-    readonly property color buttonColorActive: borderColor
     readonly property color buttonColorHovered: Qt.rgba(1, 1, 1, 0.15)
     readonly property color text: "white"
-    readonly property color textDim: Qt.rgba(1, 1, 1, 0.45)
 
     readonly property string fontFamily: "BlexMono Nerd Font"
     readonly property int fontSize: 16
@@ -19,7 +17,12 @@ Singleton {
     readonly property int padding: 10
     readonly property int radius: 5
     readonly property int borderWidth: 1
-    readonly property int barSpacing: 15
+
+    readonly property int spaceXs: 4
+    readonly property int spaceSm: 8
+    readonly property int spaceStat: 12
+    readonly property int spaceMd: 16
+    readonly property int barInset: (barHeight - tagHeight) / 2
 
     readonly property color tagActive: Qt.rgba(1, 1, 1, 0.20)
     readonly property color tagHover: Qt.rgba(1, 1, 1, 0.08)
@@ -47,11 +50,7 @@ Singleton {
         "VF": [[0,0,1,.333], [0,.333,1,.333], [0,.667,1,.333]]
     })
     
-    readonly property int vitalsSpacing: 5
-    readonly property int iconToValueSpacing: 8
-    readonly property string bracketLeft: "⢸"
-    readonly property string bracketRight: "⡇"
-    readonly property string iconCpu: "\u{F4BC}"
+    readonly property string iconCpu: "\u{F035B}"
     readonly property string iconMemory: "\u{EFC5}"
     readonly property string iconTemp: "\u{F050F}"
     readonly property string iconVolumeHigh: "\u{F057E}"
@@ -59,9 +58,6 @@ Singleton {
     readonly property string iconVolumeLow: "\u{F057F}"
     readonly property string iconVolumeZero: "\u{F075F}"
     readonly property string iconVolumeMuted: "\u{F0581}"
-    readonly property string iconWifi: "\u{F05A9}"
-    readonly property string iconEthernet: "\u{F0200}"
-    readonly property string iconOffline: "\u{F05AA}"
     readonly property string iconPlay: "\u{F040A}"
     readonly property string iconPause: "\u{F03E4}"
     readonly property string iconNext: "\u{F04AD}"
