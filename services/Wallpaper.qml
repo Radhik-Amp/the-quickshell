@@ -7,6 +7,8 @@ import QtQuick
 Singleton {
     id: root
 
+    property string pendingDirectory: ""
+    property string directoryError: ""
     property var currentPaths: ({})
     property var entries: []
     property var currentDirectory: Quickshell.env("HOME") + "/wallpapers"
@@ -19,6 +21,22 @@ Singleton {
         target: "wallpaper"
         function set(path: string): void { root.set(path) }
         function toggle(): void { root.toggle() }
+    }
+
+    function setDirectory(text: string) {
+        const path = text.trim().replace(/^~/, Quickshell.env("HOME")).replace(/\/+$/, "")
+
+        if (!path) {
+            root.directoryError = "Enter a folder path"
+            return
+        } 
+
+        if (path === root.currentDirectory) refresh()
+        else {
+            root.pendingDirectory = path
+            dirCheck.command = ["test", "-d", path]
+            dirCheck.running = true
+        }
     }
 
     function refresh() {
@@ -86,6 +104,19 @@ Singleton {
                 }
                 newEntries.sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
                 root.entries = newEntries
+            }
+        }
+    }
+
+    Process {
+    id: dirCheck
+        onExited: (code) => {
+            if (code === 0) {
+                root.currentDirectory = root.pendingDirectory
+                root.directoryError = ""
+                root.refresh()
+            } else {
+                root.directoryError = "Folder not found: " + root.pendingDirectory
             }
         }
     }

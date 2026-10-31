@@ -7,6 +7,7 @@ import Quickshell
 import Quickshell.Wayland
 import Quickshell.Widgets
 import QtQuick
+import QtQuick.Controls
 import QtQuick.Layouts
 
 PanelWindow {
@@ -51,18 +52,69 @@ PanelWindow {
         focus: true
         Keys.onEscapePressed: Wallpaper.shown = false
 
-        TapHandler { gesturePolicy: TapHandler.ReleaseWithinBounds }
+        TapHandler {
+            gesturePolicy: TapHandler.ReleaseWithinBounds
+            onTapped: pickerPanel.forceActiveFocus()
+        }
 
         ColumnLayout {
             id: contentColumn
             anchors.fill: parent
             anchors.margins: Theme.padding
             spacing: Theme.padding
+
+            RowLayout {
+                Layout.alignment: Qt.AlignHCenter
+                Layout.fillWidth: false
+                Layout.maximumWidth: contentColumn.width
+                spacing: 4
+
+                BarText { text: "\u{F024B}" }
+
+                Rectangle {
+                    id: fieldWrap
+                    Layout.fillWidth: true
+                    implicitWidth: pathField.implicitWidth + Theme.padding
+                    Layout.preferredHeight: 30
+                    radius: Theme.radius
+                    color: pathField.activeFocus ? Theme.background : "transparent"
+                    border.width: pathField.activeFocus ? Theme.borderWidth : 0
+                    border.color: Theme.borderColorMuted
+
+                    TextField {
+                        id: pathField
+                        anchors.centerIn: parent
+                        anchors.leftMargin: Theme.padding / 2
+                        anchors.rightMargin: Theme.padding / 2
+
+                        readonly property string displayPath: Wallpaper.currentDirectory.replace(Quickshell.env("HOME"), "~")
+
+                        text: displayPath
+                        placeholderText: "Enter path..."
+                        placeholderTextColor: Qt.rgba(1, 1, 1, 0.4)
+                        color: Theme.text
+                        font.family: Theme.fontFamily
+                        font.pixelSize: Theme.fontSize
+                        background: null
+                        padding: 0
+                        verticalAlignment: TextInput.AlignVCenter
+
+                        onAccepted: {
+                            if (text.length > 0) Wallpaper.setDirectory(text)
+                            pickerPanel.forceActiveFocus()
+                        }
+                        onTextEdited: Wallpaper.directoryError = ""
+                        onActiveFocusChanged: if (!activeFocus) text = Qt.binding(() => displayPath)
+                    }
+                }
+            }
+
             BarText {
                 Layout.fillWidth: true
                 horizontalAlignment: Text.AlignHCenter
-                elide: Text.ElideMiddle
-                text: "\u{F024B} " + Wallpaper.currentDirectory.replace(Quickshell.env("HOME"), "~")
+                visible: text !== ""
+                text: Wallpaper.directoryError
+                color: "red"
             }
 
             Rectangle {
