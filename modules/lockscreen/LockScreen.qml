@@ -125,6 +125,7 @@ WlSessionLock {
 
                         text: Qt.formatTime(currentTime, "hh:mm")
                         font.pixelSize: 80
+                        font.bold: true
 
                         Timer {
                             interval: 1000
@@ -186,10 +187,11 @@ WlSessionLock {
                             }
 
                             BusyIndicator {
-                                visible: LockScreenState.authenticating
                                 running: LockScreenState.authenticating
+                                padding: 0
                                 implicitWidth: 18
                                 implicitHeight: 18
+                                palette.text: "white"
                             }
                         }
                     } 
