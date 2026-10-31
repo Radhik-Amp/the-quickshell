@@ -15,7 +15,6 @@ RowLayout {
 
     spacing: Theme.spaceSm
 
-    // Buttons sit flush: the boxes' own padding is enough of a gap
     RowLayout {
         spacing: 0
 
@@ -26,7 +25,7 @@ RowLayout {
 
         IconButton {
             text: root.player?.isPlaying ? Theme.iconPause : Theme.iconPlay
-            onClicked: root.player.togglePlaying()
+            onClicked: root.player?.togglePlaying()
         }
 
         IconButton {
@@ -47,7 +46,6 @@ RowLayout {
         property int fade: Theme.spaceMd
         property real rowOffset: 0
 
-        // Soften the clipped edges while scrolling instead of cutting glyphs off
         layer.enabled: overflowing
         layer.effect: MultiEffect {
             maskEnabled: true
@@ -63,7 +61,7 @@ RowLayout {
             layer.enabled: true
             gradient: Gradient {
                 orientation: Gradient.Horizontal
-                // Left edge only fades while scrolling; a paused title starts crisp
+
                 GradientStop { position: 0; color: animation.running ? "transparent" : "white" }
                 GradientStop { position: ticker.fade / ticker.width; color: "white" }
                 GradientStop { position: 1 - ticker.fade / ticker.width; color: "white" }
