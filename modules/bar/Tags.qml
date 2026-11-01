@@ -9,6 +9,26 @@ RowLayout {
 
     spacing: Theme.spaceSm
 
+    WheelHandler {
+        property real accumulated: 0
+
+        acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
+        onWheel: event => {
+            accumulated += event.angleDelta.y
+            const steps = Math.trunc(accumulated / 120)
+            if (steps === 0)
+                return
+            accumulated -= steps * 120
+
+            const current = Mango.pendingTag >= 0 ? Mango.pendingTag
+                          : Mango.tags.findIndex(t => t.is_active)
+            if (current < 0)
+                return
+            const next = (((current - steps) % 9) + 9) % 9
+            Mango.viewTag(next + 1)
+        }
+    }
+
     Repeater {
         model: 9
 
