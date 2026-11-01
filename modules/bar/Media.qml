@@ -73,7 +73,7 @@ RowLayout {
             id: row
             spacing: ticker.gap
             anchors.verticalCenter: parent.verticalCenter
-            x: ticker.overflowing ? ticker.rowOffset : 0
+            x: ticker.overflowing ? ticker.rowOffset : (ticker.width - tickerText.implicitWidth) / 2
 
             BarText {
                 id: tickerText
