@@ -62,5 +62,16 @@ Singleton {
     readonly property string iconPause: "\u{F03E4}"
     readonly property string iconNext: "\u{F04AD}"
     readonly property string iconPrevious: "\u{F04AE}"
+    readonly property string iconWeatherClear: "\u{F0599}"
+    readonly property string iconWeatherClearNight: "\u{F0594}"
+    readonly property string iconWeatherPartlyCloudy: "\u{F0595}"
+    readonly property string iconWeatherPartlyCloudyNight: "\u{F0F31}"
+    readonly property string iconWeatherCloudy: "\u{F0590}"
+    readonly property string iconWeatherFog: "\u{F0591}"
+    readonly property string iconWeatherRain: "\u{F0597}"
+    readonly property string iconWeatherPouring: "\u{F0596}"
+    readonly property string iconWeatherSleet: "\u{F067F}"
+    readonly property string iconWeatherSnow: "\u{F0598}"
+    readonly property string iconWeatherThunder: "\u{F0593}"
 }
 

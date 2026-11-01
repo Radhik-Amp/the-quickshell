@@ -59,6 +59,8 @@ PanelWindow {
                     }
 
                     Tags {}
+
+                    WeatherStat {}
                 }
             }
 
@@ -72,7 +74,6 @@ PanelWindow {
 
                 RowLayout {
                     anchors.right: parent.right
-                    // Matches the left end, where the first glyph sits inside a button's padding
                     anchors.rightMargin: Theme.spaceXs
                     anchors.verticalCenter: parent.verticalCenter
                     spacing: Theme.spaceMd
