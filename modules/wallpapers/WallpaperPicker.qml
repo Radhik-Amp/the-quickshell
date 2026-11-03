@@ -138,6 +138,7 @@ PanelWindow {
                     required property string modelData
                     width: grid.cellWidth
                     height: grid.cellHeight
+                    z: gridHover.hovered ? 1 : 0
 
                     ClippingRectangle {
                         id: contentRect
@@ -147,6 +148,14 @@ PanelWindow {
                         color: "transparent"
                         border.width: Theme.borderWidth
                         border.color: Object.values(Wallpaper.currentPaths).includes(contentItem.modelData) ? Theme.borderColor : Theme.borderColorMuted
+
+                        scale: gridTap.pressed ? 0.97 : (gridHover.hovered ? 1.03 : 1)
+                        Behavior on scale {
+                            NumberAnimation {
+                                duration: 150
+                                easing.type: Easing.OutCubic
+                            }
+                        }
 
                         Image {
                             anchors.fill: parent
@@ -162,6 +171,7 @@ PanelWindow {
                         }
 
                         TapHandler {
+                            id: gridTap
                             onTapped: if (!Object.values(Wallpaper.currentPaths).includes(contentItem.modelData)) Wallpaper.set(contentItem.modelData) 
                         }
                     }
