@@ -2,7 +2,7 @@ import qs.config
 import qs.services
 import QtQuick
 
-BarStat {
+StatItem {
     visible: Weather.ready
     icon: Weather.icon
     iconWidest: [Theme.iconWeatherClear, Theme.iconWeatherClearNight, Theme.iconWeatherPartlyCloudy,

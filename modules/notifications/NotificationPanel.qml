@@ -17,7 +17,7 @@ Scope {
         function toggle(): void { root.centerOpen = !root.centerOpen }
         function show(): void { root.centerOpen = true }
         function hide(): void { root.centerOpen = false }
-        function toggleDnd(): void { ControlState.dnd = !ControlState.dnd }
+        function toggleDnd(): void { ControlCenterState.dnd = !ControlCenterState.dnd }
     }
 
     PanelWindow {
@@ -38,7 +38,7 @@ Scope {
             spacing: Theme.padding
 
             Repeater {
-                model: Notifs.server.trackedNotifications
+                model: NotificationService.server.trackedNotifications
 
                 Rectangle {
                     id: card
@@ -82,14 +82,14 @@ Scope {
                             Layout.fillWidth: true
                             spacing: 2
 
-                            BarText {
+                            StyledText {
                                 Layout.fillWidth: true
                                 text: card.modelData.summary
                                 font.bold: true
                                 elide: Text.ElideRight
                             }
 
-                            BarText {
+                            StyledText {
                                 Layout.fillWidth: true
                                 visible: text !== ""
                                 text: card.modelData.body
@@ -135,21 +135,21 @@ Scope {
                 RowLayout {
                     Layout.fillWidth: true
 
-                    BarText {
+                    StyledText {
                         Layout.fillWidth: true
                         text: "Notifications"
                         font.pixelSize: Theme.fontSize + 2
                         font.bold: true
                     }
 
-                    BarText {
+                    StyledText {
                         text: "Clear all"
-                        visible: Notifs.history.count > 0
+                        visible: NotificationService.history.count > 0
                         color: "#E05252"
                         font.pixelSize: Theme.fontSize - 1
                         HoverHandler { cursorShape: Qt.PointingHandCursor }
                         TapHandler {
-                            onTapped: { for (const n of Notifs.server.trackedNotifications.values.slice()) n.dismiss(); Notifs.history.clear() }
+                            onTapped: { for (const n of NotificationService.server.trackedNotifications.values.slice()) n.dismiss(); NotificationService.history.clear() }
                         }
                     }
                 }
@@ -157,10 +157,10 @@ Scope {
                 ListView {
                     Layout.fillWidth: true
                     Layout.preferredHeight: Math.min(contentHeight, 500)
-                    visible: Notifs.history.count > 0
+                    visible: NotificationService.history.count > 0
                     clip: true
                     spacing: Theme.padding
-                    model: Notifs.history
+                    model: NotificationService.history
 
                     delegate: Rectangle {
                         id: entry
@@ -190,14 +190,14 @@ Scope {
                                 Layout.fillWidth: true
                                 spacing: Theme.padding
 
-                                BarText {
+                                StyledText {
                                     Layout.fillWidth: true
                                     text: entry.summary
                                     font.bold: true
                                     elide: Text.ElideRight
                                 }
 
-                                BarText {
+                                StyledText {
                                     text: entry.time
                                     font.pixelSize: Theme.fontSize - 2
                                 }
@@ -209,7 +209,7 @@ Scope {
                                     implicitWidth: implicitHeight
                                     radius: Theme.radius
                                     color: "transparent"
-                                    BarText {
+                                    StyledText {
                                         id: closeText
                                         anchors.centerIn: parent
                                         text: "\u{F0156}"
@@ -218,13 +218,13 @@ Scope {
                                     }
                                     HoverHandler { id: hover; cursorShape: Qt.PointingHandCursor }
                                     TapHandler {
-                                        onTapped: { Notifs.dismissNotif(entry.notifId); Notifs.history.remove(entry.index) }
+                                        onTapped: { NotificationService.dismissNotif(entry.notifId); NotificationService.history.remove(entry.index) }
                                     }
 
                                 }
                             }
 
-                            BarText {
+                            StyledText {
                                 Layout.fillWidth: true
                                 visible: text !== ""
                                 text: entry.body
@@ -232,7 +232,7 @@ Scope {
                                 wrapMode: Text.WordWrap
                             }
 
-                            BarText {
+                            StyledText {
                                 visible: entry.appName !== ""
                                 text: entry.appName
                                 font.pixelSize: Theme.fontSize - 4
@@ -241,8 +241,8 @@ Scope {
                     }
                 }
 
-                BarText {
-                    visible: Notifs.history.count === 0
+                StyledText {
+                    visible: NotificationService.history.count === 0
                     text: "No notifications"
                     font.pixelSize: Theme.fontSize - 1
                 }

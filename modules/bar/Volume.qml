@@ -2,7 +2,7 @@ import qs.config
 import qs.services
 import QtQuick
 
-BarStat {
+StatItem {
     icon: Audio.muted ? Theme.iconVolumeMuted
         : Audio.volume > 66 ? Theme.iconVolumeHigh
         : Audio.volume > 33 ? Theme.iconVolumeMedium

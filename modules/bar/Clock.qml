@@ -3,7 +3,7 @@ import qs.components
 import Quickshell
 import QtQuick
 
-BarText {
+StyledText {
     id: root
     property bool showDate: false
 
@@ -25,6 +25,6 @@ BarText {
     }
     TapHandler {
         acceptedButtons: Qt.RightButton
-        onTapped: ControlState.shown = !ControlState.shown
+        onTapped: ControlCenterState.shown = !ControlCenterState.shown
     }
 }

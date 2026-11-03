@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
 
-BarText {
+StyledText {
     id: root
 
     required property var widest

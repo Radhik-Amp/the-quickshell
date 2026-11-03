@@ -54,7 +54,7 @@ RowLayout {
                  : hover.hovered ? Theme.tagHover
                  : "transparent"
 
-            BarText {
+            StyledText {
                 anchors.centerIn: parent
                 text: tag.number
             }

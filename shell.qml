@@ -1,14 +1,14 @@
 import Quickshell
 import qs.modules.bar
-import qs.modules.control
+import qs.modules.controlcenter
 import qs.modules.notifications
 import qs.modules.lockscreen
-import qs.modules.wallpapers
+import qs.modules.wallpaper
 
 Scope {
     Bar {}
-    Notification {}
-    Control {}
+    NotificationPanel {}
+    ControlCenter {}
     LockScreen {}
     WallpaperPicker {}
 }

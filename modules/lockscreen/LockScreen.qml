@@ -117,7 +117,7 @@ WlSessionLock {
                     width: parent.width
                     spacing: 4
 
-                    BarText {
+                    StyledText {
                         id: clockText
                         Layout.alignment: Qt.AlignHCenter
 
@@ -135,7 +135,7 @@ WlSessionLock {
                         }
                     }
 
-                    BarText {
+                    StyledText {
                         Layout.alignment: Qt.AlignHCenter
                         text: Qt.formatDate(clockText.currentTime, "dddd, MMMM d")
                         color: Qt.rgba(1, 1, 1, 0.75)
@@ -196,7 +196,7 @@ WlSessionLock {
                         }
                     } 
 
-                    BarText {
+                    StyledText {
                         Layout.alignment: Qt.AlignHCenter
                         text: LockScreenState.message
                         color: "#E05252"
@@ -206,7 +206,7 @@ WlSessionLock {
                         Behavior on opacity { NumberAnimation { duration: 200; easing.type: Easing.InOutSine } }
                     }
 
-                   LockSession {} 
+                   LockSessionActions {} 
                 }
             }
 

@@ -84,7 +84,7 @@ PanelWindow {
                         spacing: Theme.spaceStat
 
                         Volume {}
-                        Vitals {}
+                        SystemStats {}
                     }
 
                 }

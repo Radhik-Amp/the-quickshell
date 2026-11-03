@@ -14,13 +14,13 @@ RowLayout {
 
     spacing: Theme.spaceSm
 
-    StableText {
+    FixedWidthText {
         text: root.icon
         widest: root.iconWidest
         horizontalAlignment: Text.AlignHCenter
     }
 
-    StableText {
+    FixedWidthText {
         text: root.value
         widest: root.widest
         horizontalAlignment: root.valueAlignment

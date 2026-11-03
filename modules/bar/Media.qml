@@ -75,11 +75,11 @@ RowLayout {
             anchors.verticalCenter: parent.verticalCenter
             x: ticker.overflowing ? ticker.rowOffset : (ticker.width - tickerText.implicitWidth) / 2
 
-            BarText {
+            StyledText {
                 id: tickerText
                 text: ticker.text
             }
-            BarText {
+            StyledText {
                 text: ticker.text
                 visible: ticker.overflowing
             }

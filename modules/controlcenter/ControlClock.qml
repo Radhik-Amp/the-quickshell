@@ -30,7 +30,7 @@ ColumnLayout {
         Repeater {
             model: ["[s]", "[m]", "[t]", "[w]", "[t]", "[f]", "[s]"]
 
-            BarText {
+            StyledText {
                 Layout.alignment: Qt.AlignHCenter
                 required property var modelData
                 text: modelData
@@ -57,7 +57,7 @@ ColumnLayout {
                     id: hover
                 }
 
-                BarText {
+                StyledText {
                     id: dayText
                     anchors.centerIn: parent
                     text: parent.day > 0 ? parent.day : ""

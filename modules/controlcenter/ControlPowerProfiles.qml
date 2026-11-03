@@ -50,7 +50,7 @@ Rectangle {
                      : active ? Theme.borderColor 
                      : "transparent"
 
-                BarText {
+                StyledText {
                     id: profileText
                     anchors.centerIn: parent
                     text: modelData.label

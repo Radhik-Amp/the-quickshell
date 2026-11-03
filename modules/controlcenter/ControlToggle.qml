@@ -52,9 +52,9 @@ Rectangle {
         }
         spacing: 2
 
-        BarText { text: root.icon; color: root.fg; font.pixelSize: Theme.fontSize + 4 }
-        BarText { text: root.label; color: root.fg }
-        BarText {
+        StyledText { text: root.icon; color: root.fg; font.pixelSize: Theme.fontSize + 4 }
+        StyledText { text: root.label; color: root.fg }
+        StyledText {
             Layout.fillWidth: true
             text: root.status
             color: root.dim

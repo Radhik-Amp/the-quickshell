@@ -26,7 +26,7 @@ Singleton {
                 urgency: n.urgency,
                 time: Qt.formatDateTime(new Date(), "HH:mm")
             })
-            if (ControlState.dnd && n.urgency !== NotificationUrgency.Critical) return
+            if (ControlCenterState.dnd && n.urgency !== NotificationUrgency.Critical) return
             n.tracked = true
         }
     }

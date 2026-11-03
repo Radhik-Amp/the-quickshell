@@ -17,11 +17,11 @@ ColumnLayout {
 
     RowLayout {
         Layout.fillWidth: true
-        BarText {
+        StyledText {
             Layout.fillWidth: true
             text: "●" + " " + root.label
         }
-        BarText {
+        StyledText {
             text: String(Math.round(root.value)).padStart(3, "0")
         }
     }

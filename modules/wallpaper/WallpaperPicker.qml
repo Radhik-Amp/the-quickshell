@@ -69,7 +69,7 @@ PanelWindow {
                 Layout.maximumWidth: contentColumn.width
                 spacing: 4
 
-                BarText { text: "\u{F024B}" }
+                StyledText { text: "\u{F024B}" }
 
                 Rectangle {
                     id: fieldWrap
@@ -109,7 +109,7 @@ PanelWindow {
                 }
             }
 
-            BarText {
+            StyledText {
                 Layout.fillWidth: true
                 horizontalAlignment: Text.AlignHCenter
                 visible: text !== ""

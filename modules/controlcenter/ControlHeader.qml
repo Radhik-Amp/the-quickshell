@@ -9,13 +9,13 @@ RowLayout {
     property bool beep: true
     readonly property string dot: beep ? filled : unfilled
 
-    BarText {
+    StyledText {
         text: "ctrl"
     }
     Item {
         Layout.fillWidth: true
     }
-    BarText {
+    StyledText {
         text: root.dot + " all systems nominal"
     }
     Timer {

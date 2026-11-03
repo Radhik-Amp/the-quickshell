@@ -12,7 +12,7 @@ Rectangle {
     radius: Theme.radius
     color: hover.hovered ? Theme.tagHover : "transparent"
 
-    BarText {
+    StyledText {
         id: label
         anchors.centerIn: parent
     }

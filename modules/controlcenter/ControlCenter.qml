@@ -25,7 +25,7 @@ PanelWindow {
     implicitHeight: tether + panelHeight
     color: "transparent"
 
-    readonly property bool shown: ControlState.shown
+    readonly property bool shown: ControlCenterState.shown
 
     mask: Region { item: clipper }
 
@@ -33,7 +33,7 @@ PanelWindow {
 
     IpcHandler {
         target: "control"
-        function toggle(): void { ControlState.shown = !ControlState.shown } 
+        function toggle(): void { ControlCenterState.shown = !ControlCenterState.shown } 
     }
 
     SystemClock {
@@ -47,7 +47,7 @@ PanelWindow {
         width: root.implicitWidth
         height: root.shown ? root.implicitHeight : 0
         focus: true
-        Keys.onEscapePressed: ControlState.shown = false
+        Keys.onEscapePressed: ControlCenterState.shown = false
 
         Rectangle {
             x: Math.round(parent.width / 2)
@@ -102,14 +102,14 @@ PanelWindow {
                                 margins: Theme.padding
 
                             }
-                            BarText {
+                            StyledText {
                                 Layout.fillWidth: true
                                 horizontalAlignment: Text.AlignHCenter
                                 text: Qt.formatDateTime(clock.date, "hh:mm:ss AP")
                                 font.pixelSize: 32
                             }
 
-                            BarText {
+                            StyledText {
                                 Layout.fillWidth: true
                                 horizontalAlignment: Text.AlignHCenter
                                 text: Qt.formatDateTime(clock.date, "MMMM yyyy")
@@ -167,9 +167,9 @@ PanelWindow {
                                 Layout.fillWidth: true
                                 icon: "\u{F0594}"
                                 label: "dnd"
-                                status: ControlState.dnd ? "on" : "off"
-                                active: ControlState.dnd
-                                onClicked: ControlState.dnd = !ControlState.dnd
+                                status: ControlCenterState.dnd ? "on" : "off"
+                                active: ControlCenterState.dnd
+                                onClicked: ControlCenterState.dnd = !ControlCenterState.dnd
                             }
 
                             ControlToggle {
@@ -184,24 +184,24 @@ PanelWindow {
                         }
 
 
-                        ControlBar {
+                        ControlSlider {
                             label: "Audio"
                             value: Audio.volume
                             onMoved: v => Audio.setVolume(v)
                         }
 
-                        ControlBar {
+                        ControlSlider {
                             label: "Brightness"
                             value: Brightness.value
                             onMoved: v => Brightness.set(v)
                         }
 
-                        Power {}
+                        ControlPowerProfiles {}
                     }
                 }
 
                 Rectangle {
-                    visible: Notifs.history.count !== 0
+                    visible: NotificationService.history.count !== 0
                     Layout.fillWidth: true
                     implicitHeight: 1
                     color: Qt.rgba(1, 1, 1, 0.5)
@@ -213,7 +213,7 @@ PanelWindow {
                     spacing: Theme.padding
 
                     Repeater {
-                        model: Notifs.history
+                        model: NotificationService.history
 
                         Rectangle {
                             id: notif
@@ -242,20 +242,20 @@ PanelWindow {
                                 RowLayout {
                                     Layout.fillWidth: true
                                     
-                                    BarText {
+                                    StyledText {
                                         Layout.fillWidth: true
                                         text: notif.summary
                                         font.bold: true
                                         elide: Text.ElideRight
                                     }
 
-                                    BarText {
+                                    StyledText {
                                         text: notif.time
                                         font.pixelSize: Theme.fontSize - 2
                                     }
                                 }
 
-                                BarText {
+                                StyledText {
                                     Layout.fillWidth: true
                                     visible: text !== ""
                                     text: notif.body
@@ -276,7 +276,7 @@ PanelWindow {
                     color: Qt.rgba(1, 1, 1, 0.5)
                 }
 
-                ControlSession {}
+                ControlSessionActions {}
             }
 
         }

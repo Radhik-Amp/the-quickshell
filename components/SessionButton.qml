@@ -33,7 +33,7 @@ Rectangle {
         color: Theme.borderColor
     }
 
-    BarText {
+    StyledText {
         id: sessionText
         anchors.centerIn: parent
         text: root.label
