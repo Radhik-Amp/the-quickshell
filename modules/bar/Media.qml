@@ -1,19 +1,24 @@
 import qs.config
 import qs.components
-import Quickshell.Services.Mpris
+import qs.services
 import QtQuick
 import QtQuick.Effects
 import QtQuick.Layouts
 
 RowLayout {
     id: root
-    property var players: Mpris.players.values
-    readonly property var player: players.find(p => p.isPlaying && p.identity.toLowerCase().includes("spotify"))
-        ?? players.find(p => p.isPlaying)
-        ?? players.find(p => p.identity.toLowerCase().includes("spotify"))
-        ?? players[0]
+    readonly property var player: MediaCenterState.player
 
     spacing: Theme.spaceSm
+
+    readonly property real centerX: {
+        x; width; parent.x; parent.width;
+        return mapToItem(null, width / 2, 0).x + Theme.padding 
+    }
+    onCenterXChanged: MediaCenterState.anchorX = centerX
+    Component.onCompleted: MediaCenterState.anchorX = centerX
+
+
 
     RowLayout {
         spacing: 0
@@ -53,6 +58,13 @@ RowLayout {
             maskThresholdMin: 0.5
             maskSpreadAtMin: 1.0
         }
+
+        TapHandler {
+            acceptedButtons: Qt.LeftButton
+            onTapped: MediaCenterState.shown = !MediaCenterState.shown
+        }
+
+        HoverHandler { cursorShape: Qt.PointingHandCursor }
 
         Rectangle {
             id: tickerMask
@@ -96,7 +108,7 @@ RowLayout {
             onRunningChanged: if (!running) ticker.rowOffset = 0
 
         }
-        onTextChanged: {rowOffset = 0; if (animation.running) animation.restart() }
+        onTextChanged: { rowOffset = 0; if (animation.running) animation.restart() }
 
     }
 }

@@ -62,6 +62,13 @@ Singleton {
     readonly property string iconPause: "\u{F03E4}"
     readonly property string iconNext: "\u{F04AD}"
     readonly property string iconPrevious: "\u{F04AE}"
+    readonly property string iconShuffle: "\u{F049D}"
+    readonly property string iconShuffleOff: "\u{F049E}"
+    readonly property string iconRepeat: "\u{F0456}"
+    readonly property string iconRepeatOnce: "\u{F0458}"
+    readonly property string iconRepeatOff: "\u{F0457}"
+    readonly property string iconMusic: "\u{F0387}"
+    readonly property color textMuted: Qt.rgba(1, 1, 1, 0.6)
     readonly property string iconWeatherClear: "\u{F0599}"
     readonly property string iconWeatherClearNight: "\u{F0594}"
     readonly property string iconWeatherPartlyCloudy: "\u{F0595}"

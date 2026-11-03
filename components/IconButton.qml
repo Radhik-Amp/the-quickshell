@@ -5,12 +5,15 @@ import QtQuick
 Rectangle {
     id: root
     property alias text: label.text
+    property alias textColor: label.color
+    property alias font: label.font
     signal clicked()
 
     implicitWidth: Theme.tagHeight
     implicitHeight: Theme.tagHeight
     radius: Theme.radius
-    color: hover.hovered ? Theme.tagHover : "transparent"
+    color: hover.hovered && enabled ? Theme.tagHover : "transparent"
+    opacity: enabled ? 1 : 0.35
 
     StyledText {
         id: label
@@ -19,7 +22,10 @@ Rectangle {
 
     HoverHandler {
         id: hover
-        cursorShape: Qt.PointingHandCursor
+        cursorShape: root.enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
     }
-    TapHandler { onTapped: root.clicked() }
+    TapHandler {
+        enabled: root.enabled
+        onTapped: root.clicked()
+    }
 }
