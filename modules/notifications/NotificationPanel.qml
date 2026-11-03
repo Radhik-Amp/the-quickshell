@@ -17,7 +17,7 @@ Scope {
         function toggle(): void { root.centerOpen = !root.centerOpen }
         function show(): void { root.centerOpen = true }
         function hide(): void { root.centerOpen = false }
-        function toggleDnd(): void { ControlCenterState.dnd = !ControlCenterState.dnd }
+        function toggleDnd(): void { NotificationService.dnd = !NotificationService.dnd }
     }
 
     PanelWindow {

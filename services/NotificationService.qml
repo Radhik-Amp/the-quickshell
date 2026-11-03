@@ -5,6 +5,9 @@ import Quickshell.Services.Notifications
 import QtQuick
 
 Singleton {
+    id: root
+
+    property bool dnd: false
     property alias history: history
     property alias server: server
 
@@ -26,7 +29,7 @@ Singleton {
                 urgency: n.urgency,
                 time: Qt.formatDateTime(new Date(), "HH:mm")
             })
-            if (ControlCenterState.dnd && n.urgency !== NotificationUrgency.Critical) return
+            if (root.dnd && n.urgency !== NotificationUrgency.Critical) return
             n.tracked = true
         }
     }

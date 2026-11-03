@@ -167,9 +167,9 @@ PanelWindow {
                                 Layout.fillWidth: true
                                 icon: "\u{F0594}"
                                 label: "dnd"
-                                status: ControlCenterState.dnd ? "on" : "off"
-                                active: ControlCenterState.dnd
-                                onClicked: ControlCenterState.dnd = !ControlCenterState.dnd
+                                status: NotificationService.dnd ? "on" : "off"
+                                active: NotificationService.dnd
+                                onClicked: NotificationService.dnd = !NotificationService.dnd
                             }
 
                             ControlToggle {
