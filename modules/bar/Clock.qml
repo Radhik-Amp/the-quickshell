@@ -20,11 +20,11 @@ StyledText {
         cursorShape: Qt.PointingHandCursor
     }
     TapHandler {
-        acceptedButtons: Qt.LeftButton
+        acceptedButtons: Qt.RightButton
         onTapped: root.showDate = !root.showDate
     }
     TapHandler {
-        acceptedButtons: Qt.RightButton
+        acceptedButtons: Qt.LeftButton
         onTapped: ControlCenterState.shown = !ControlCenterState.shown
     }
 }
