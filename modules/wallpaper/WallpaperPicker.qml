@@ -125,12 +125,26 @@ PanelWindow {
 
             GridView {
                 id: grid
+
+                // bleed is experimental right now - to fix the clipping of panel margins on hover
+                readonly property real hoverScale: 1.03
+                readonly property int bleed: Math.ceil(contentColumn.width / 3 * (hoverScale - 1) / 2)
+
                 model: Wallpaper.entries
                 Layout.fillWidth: true
-                Layout.preferredHeight: Math.min(pickerPanel.rows, Math.ceil(count / 3)) * cellHeight
+                Layout.leftMargin: -bleed
+                Layout.rightMargin: -bleed
+                Layout.topMargin: -bleed
+                Layout.bottomMargin: -bleed
+                Layout.preferredHeight: Math.min(pickerPanel.rows, Math.ceil(count / 3)) * cellHeight + topMargin + bottomMargin
                 clip: true
 
-                cellWidth: width / 3
+                leftMargin: bleed
+                rightMargin: bleed
+                topMargin: bleed
+                bottomMargin: bleed
+
+                cellWidth: (width - leftMargin - rightMargin) / 3
                 cellHeight: Math.floor(cellWidth * (root.screen.height / root.screen.width))
 
                 delegate: Item {
@@ -149,7 +163,7 @@ PanelWindow {
                         border.width: Theme.borderWidth
                         border.color: Object.values(Wallpaper.currentPaths).includes(contentItem.modelData) ? Theme.borderColor : Theme.borderColorMuted
 
-                        scale: gridTap.pressed ? 0.97 : (gridHover.hovered ? 1.03 : 1)
+                        scale: gridTap.pressed ? 0.97 : (gridHover.hovered ? grid.hoverScale : 1)
                         Behavior on scale {
                             NumberAnimation {
                                 duration: 150
