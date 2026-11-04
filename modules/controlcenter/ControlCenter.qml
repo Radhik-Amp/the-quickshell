@@ -44,6 +44,12 @@ DropdownPanel {
 
             ColumnLayout {
                 id: content
+                anchors {
+                    top: parent.top
+                    left: parent.left
+                    right: parent.right
+                    margins: Theme.padding
+                }
                 StyledText {
                     Layout.fillWidth: true
                     horizontalAlignment: Text.AlignHCenter
@@ -59,10 +65,7 @@ DropdownPanel {
                     color: Qt.rgba(1, 1, 1, 0.85)
                 }
 
-                ControlClock {
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                }
+                ControlClock {}
             }
         }
 
