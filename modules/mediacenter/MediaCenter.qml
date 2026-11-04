@@ -11,7 +11,7 @@ import QtQuick.Layouts
 PanelWindow {
     id: root
 
-    readonly property bool shown: MediaCenterState.shown
+    readonly property bool shown: Panels.active === "media"
     readonly property var player: MediaCenterState.player
     readonly property int tether: Theme.padding
     readonly property int panelHeight: column.implicitHeight + Theme.padding * 2
@@ -44,7 +44,7 @@ PanelWindow {
         width: root.implicitWidth
         height: root.shown ? root.implicitHeight : 0
         focus: true
-        Keys.onEscapePressed: MediaCenterState.shown = false
+        Keys.onEscapePressed: Panels.close()
 
         Behavior on height {
             NumberAnimation {

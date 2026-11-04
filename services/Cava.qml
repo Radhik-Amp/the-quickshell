@@ -12,7 +12,7 @@ Singleton {
     readonly property var zeros: Array(bars).fill(0)
     property var values: zeros
 
-    readonly property bool active: MediaCenterState.shown && (MediaCenterState.player?.isPlaying ?? false)
+    readonly property bool active: Panels.active === "media" && (MediaCenterState.player?.isPlaying ?? false)
 
     Process {
         command: ["cava", "-p", Quickshell.shellPath("config/cava.conf")]

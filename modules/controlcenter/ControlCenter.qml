@@ -2,7 +2,6 @@ import qs.config
 import qs.services
 import qs.components
 import Quickshell
-import Quickshell.Io
 import Quickshell.Wayland
 import Quickshell.Bluetooth
 import Quickshell.Networking
@@ -25,16 +24,11 @@ PanelWindow {
     implicitHeight: tether + panelHeight
     color: "transparent"
 
-    readonly property bool shown: ControlCenterState.shown
+    readonly property bool shown: Panels.active === "control"
 
     mask: Region { item: clipper }
 
     WlrLayershell.keyboardFocus: shown ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
-
-    IpcHandler {
-        target: "control"
-        function toggle(): void { ControlCenterState.shown = !ControlCenterState.shown } 
-    }
 
     SystemClock {
         id: clock
@@ -47,7 +41,7 @@ PanelWindow {
         width: root.implicitWidth
         height: root.shown ? root.implicitHeight : 0
         focus: true
-        Keys.onEscapePressed: ControlCenterState.shown = false
+        Keys.onEscapePressed: Panels.close()
 
         Rectangle {
             x: Math.round(parent.width / 2)

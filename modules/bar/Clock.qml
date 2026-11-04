@@ -25,6 +25,6 @@ StyledText {
     }
     TapHandler {
         acceptedButtons: Qt.LeftButton
-        onTapped: ControlCenterState.shown = !ControlCenterState.shown
+        onTapped: Panels.toggle("control")
     }
 }

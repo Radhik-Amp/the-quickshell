@@ -1,14 +1,12 @@
 pragma Singleton
 
 import Quickshell
-import Quickshell.Io
 import Quickshell.Services.Mpris
 import QtQuick
 
 Singleton {
     id: root
 
-    property bool shown: false
     property real anchorX: 0
 
     readonly property var players: Mpris.players.values
@@ -21,9 +19,4 @@ Singleton {
         ?? null
 
     readonly property var player: selectedPlayer && players.includes(selectedPlayer) ? selectedPlayer : autoPlayer
-
-    IpcHandler {
-        target: "media"
-        function toggle(): void { root.shown = !root.shown }
-    }
 }

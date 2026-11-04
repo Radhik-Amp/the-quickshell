@@ -61,7 +61,7 @@ RowLayout {
 
         TapHandler {
             acceptedButtons: Qt.LeftButton
-            onTapped: MediaCenterState.shown = !MediaCenterState.shown
+            onTapped: Panels.toggle("media")
         }
 
         HoverHandler { cursorShape: Qt.PointingHandCursor }
