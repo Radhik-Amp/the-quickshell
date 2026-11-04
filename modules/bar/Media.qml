@@ -15,8 +15,8 @@ RowLayout {
         x; width; parent.x; parent.width;
         return mapToItem(null, width / 2, 0).x + Theme.padding 
     }
-    onCenterXChanged: MediaCenterState.anchorX = centerX
-    Component.onCompleted: MediaCenterState.anchorX = centerX
+    onCenterXChanged: Panels.setPosition("media", centerX)
+    Component.onCompleted: Panels.setPosition("media", centerX)
 
 
 

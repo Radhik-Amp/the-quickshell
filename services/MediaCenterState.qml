@@ -7,8 +7,6 @@ import QtQuick
 Singleton {
     id: root
 
-    property real anchorX: 0
-
     readonly property var players: Mpris.players.values
     property var selectedPlayer: null
 

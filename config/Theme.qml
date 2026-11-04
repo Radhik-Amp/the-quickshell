@@ -80,5 +80,11 @@ Singleton {
     readonly property string iconWeatherSleet: "\u{F067F}"
     readonly property string iconWeatherSnow: "\u{F0598}"
     readonly property string iconWeatherThunder: "\u{F0593}"
+    readonly property string iconHumidity: "\u{F058E}"
+    readonly property string iconWind: "\u{F059D}"
+    readonly property string iconGauge: "\u{F029A}"
+    readonly property string iconCloud: "\u{F015F}"
+    readonly property string iconUmbrella: "\u{F054A}"
+    readonly property string iconRefresh: "\u{F0450}"
 }
 

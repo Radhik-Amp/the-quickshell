@@ -5,6 +5,7 @@ import qs.modules.notifications
 import qs.modules.lockscreen
 import qs.modules.wallpaper
 import qs.modules.mediacenter
+import qs.modules.weathercenter
 
 Scope {
     Bar {}
@@ -13,4 +14,5 @@ Scope {
     LockScreen {}
     WallpaperPicker {}
     MediaCenter {}
+    WeatherCenter {}
 }

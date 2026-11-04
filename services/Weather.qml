@@ -55,8 +55,23 @@ Singleton {
         "pressure_msl", "wind_speed_10m", "wind_direction_10m", "wind_gusts_10m"
     ]
 
+    readonly property var hourlyFields: ["temperature_2m", "weather_code", "precipitation_probability", "is_day"]
+    readonly property var dailyFields: [
+        "weather_code", "temperature_2m_max", "temperature_2m_min",
+        "precipitation_probability_max", "sunrise", "sunset"
+    ]
+    readonly property int forecastDays: 7
+    property int hourlyCount: 8
+
+    // formatting is as such 
+    property var hourly: []// [{ time: Date, temp, code, pop, isDay, icon }]
+    property var daily: [] // [{ date: Date, code, high, low, pop, sunrise: Date, sunset: Date, icon, description }]
+    readonly property real weekLow: daily.length ? Math.min(...daily.map(d => d.low)) : 0
+    readonly property real weekHigh: daily.length ? Math.max(...daily.map(d => d.high)) : 0
+
     readonly property string requestKey: [latitude.toFixed(3), longitude.toFixed(3),
-        temperatureUnit, windSpeedUnit, precipitationUnit, fields.join(",")].join("|")
+        temperatureUnit, windSpeedUnit, precipitationUnit, fields.join(","),
+        hourlyFields.join(","), dailyFields.join(","), forecastDays].join("|")
 
     property bool cacheChecked: false
     property int retryDelay: 60 * 1000
@@ -68,6 +83,9 @@ Singleton {
             + "?latitude=" + latitude
             + "&longitude=" + longitude
             + "&current=" + fields.join(",")
+            + "&hourly=" + hourlyFields.join(",")
+            + "&daily=" + dailyFields.join(",")
+            + "&forecast_days=" + forecastDays
             + "&temperature_unit=" + temperatureUnit
             + "&wind_speed_unit=" + windSpeedUnit
             + "&precipitation_unit=" + precipitationUnit
@@ -94,8 +112,45 @@ Singleton {
         units = data.current_units ?? {}
         timezone = data.timezone ?? ""
 
-        observedAt = new Date(Date.parse(c.time + "Z") - (data.utc_offset_seconds ?? 0) * 1000)
+        const offset = data.utc_offset_seconds ?? 0
+        observedAt = parseLocal(c.time, offset)
+
+        const h = data.hourly
+        const hourStart = new Date().setMinutes(0, 0, 0)
+        const hours = []
+        for (let i = 0; i < h.time.length && hours.length < hourlyCount; i++) {
+            const time = parseLocal(h.time[i], offset)
+            if (time < hourStart) continue
+            const isDayHour = h.is_day[i] === 1
+            hours.push({
+                time: time,
+                temp: h.temperature_2m[i],
+                code: h.weather_code[i],
+                pop: h.precipitation_probability[i] ?? 0,
+                isDay: isDayHour,
+                icon: iconFor(h.weather_code[i], isDayHour)
+            })
+        }
+        hourly = hours
+
+        const d = data.daily
+        daily = d.time.map((t, i) => ({
+            date: parseLocal(t + "T12:00", offset),
+            code: d.weather_code[i],
+            high: d.temperature_2m_max[i],
+            low: d.temperature_2m_min[i],
+            pop: d.precipitation_probability_max[i] ?? 0,
+            sunrise: parseLocal(d.sunrise[i], offset),
+            sunset: parseLocal(d.sunset[i], offset),
+            icon: iconFor(d.weather_code[i], true),
+            description: describe(d.weather_code[i])
+        }))
+
         ready = true
+    }
+
+    function parseLocal(str, offsetSeconds) {
+        return new Date(Date.parse(str + "Z") - offsetSeconds * 1000)
     }
 
     function schedule(fetchedAt) {
@@ -116,7 +171,7 @@ Singleton {
         }
         try {
             const cache = JSON.parse(cacheFile.text())
-            if (cache.key === requestKey && cache.data?.current) {
+            if (cache.key === requestKey && cache.data?.current && cache.data?.hourly && cache.data?.daily) {
                 apply(cache.data)
                 lastUpdated = new Date(cache.fetchedAt)
                 schedule(cache.fetchedAt)
@@ -144,7 +199,7 @@ Singleton {
                     data = { error: true, reason: text.trim() ? "invalid response" : "no response" }
                 }
 
-                if (data.error || !data.current) {
+                if (data.error || !data.current || !data.hourly || !data.daily) {
                     root.error = data.reason ?? "unexpected response"
                     console.warn("weather: fetch failed:", root.error)
                     refreshTimer.interval = root.retryDelay
