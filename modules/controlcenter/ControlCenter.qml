@@ -123,7 +123,7 @@ DropdownPanel {
                     label: "caffeinated"
                     status: Idle.caffeine ? "on" : "off"
                     active: Idle.caffeine
-                    onClicked: Idle.caffiene = !Idle.caffeine
+                    onClicked: Idle.caffeine = !Idle.caffeine
                 }
 
             }
