@@ -18,7 +18,7 @@
 | Wayland compositor | Tags only support [MangoWM](https://github.com/DreamMaoMao/mangowc) for now |
 | [awww](https://codeberg.org/LGFae/awww) | Wallpapers |
 | [cava](https://github.com/karlstav/cava) | Media center audio visualizer |
-| [ddcutil](https://www.ddcutil.com) | External monitor brightness |
+| [ddcutil-service](https://github.com/digitaltrails/ddcutil-service) | External monitor brightness over D-Bus (uses [ddcutil](https://www.ddcutil.com)) |
 | [NetworkManager](https://networkmanager.dev) | Ethernet status (`nmcli`) |
 | PipeWire or PulseAudio | Volume control |
 | [tuned-ppd](https://github.com/redhat-performance/tuned) or [power-profiles-daemon](https://gitlab.freedesktop.org/upower/power-profiles-daemon) | Power profile switching |
@@ -31,13 +31,14 @@
 **Fedora**
 
 ```sh
-sudo dnf install quickshell awww cava ddcutil NetworkManager tuned-ppd
+sudo dnf copr enable hopsayer/ddcutil-service
+sudo dnf install quickshell awww cava ddcutil-service NetworkManager tuned-ppd
 ```
 
-**Arch** (Quickshell and awww are in the AUR)
+**Arch** (Quickshell, awww and ddcutil-service are in the AUR)
 
 ```sh
-yay -S quickshell awww
+yay -S quickshell awww ddcutil-service
 sudo pacman -S cava ddcutil networkmanager power-profiles-daemon
 ```
 
@@ -46,7 +47,7 @@ sudo pacman -S cava ddcutil networkmanager power-profiles-daemon
 
 ### 2. Allow brightness control
 
-`ddcutil` needs the `i2c-dev` module and membership in the `i2c` group to run without root:
+The shell asks `ddcutil-service` for brightness over the session bus; it starts on demand, so there's nothing to enable. The service needs the `i2c-dev` module and membership in the `i2c` group to reach the monitor:
 
 ```sh
 echo i2c-dev | sudo tee /etc/modules-load.d/i2c-dev.conf
@@ -124,3 +125,9 @@ bind=SUPER,l,spawn,qs ipc call lockscreen lock
 bind=SUPER,w,spawn,qs ipc call wallpaper toggle
 bind=SUPER,n,spawn,qs ipc call notifications toggle
 ```
+
+## TODO
+
+- [ ] **Laptop brightness.** `ddcutil-service` only reaches external monitors over DDC/CI, so built-in (`eDP`) panels get no brightness control. Route those through logind's `Session.SetBrightness("backlight", …)` and read `/sys/class/backlight/<dev>/` instead.
+- [ ] **Per-monitor brightness.** The slider always targets ddcutil display 1. Match each screen to its display by EDID (model/serial) and control the one the panel is open on.
+- [ ] **Environment variables.** Move machine-specific settings (monitor, wallpaper dir, weather location/units, idle timeouts, CPU temp sensor, font) to `VOYAGER_*` env vars with defaults.
