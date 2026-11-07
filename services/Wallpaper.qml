@@ -1,5 +1,6 @@
 pragma Singleton
 
+import qs.config
 import Quickshell
 import Quickshell.Io
 import QtQuick
@@ -11,7 +12,7 @@ Singleton {
     property string directoryError: ""
     property var currentPaths: ({})
     property var entries: []
-    property var currentDirectory: Quickshell.env("HOME") + "/wallpapers"
+    property var currentDirectory: Env.wallpaperDir
     readonly property var extensions: ["jpeg", "jpg", "png", "webp", "gif"]
 
     property bool shown: false

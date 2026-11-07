@@ -1,5 +1,6 @@
 pragma Singleton
 
+import qs.config
 import Quickshell
 import Quickshell.Io
 import QtQuick
@@ -26,7 +27,7 @@ Singleton {
 
     Process {
         id: tagProc
-        command: ["stdbuf", "-oL", "mmsg", "watch", "tags", "DP-1"]
+        command: ["stdbuf", "-oL", "mmsg", "watch", "tags", Env.monitor]
         running: true
 
         stdout: SplitParser {

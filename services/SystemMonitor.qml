@@ -1,5 +1,6 @@
 pragma Singleton
 
+import qs.config
 import Quickshell
 import Quickshell.Io
 import QtQuick
@@ -55,7 +56,7 @@ Singleton {
 
     Process{
         id: tempProc
-        command: ["cat", "/sys/class/hwmon/hwmon3/temp1_input"]
+        command: ["cat", Env.cpuTempSensor]
 
         stdout: SplitParser {
             onRead: data => {

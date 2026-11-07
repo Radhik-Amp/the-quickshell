@@ -91,18 +91,38 @@ exec-once=qs
 
 ## Configuration
 
-Settings live in plain QML files. Restart `qs` after editing them.
+### Environment variables
 
-| Setting | File | Property |
+Machine-specific settings come from `VOYAGER_*` environment variables, read when the shell starts. Anything unset uses the default; an invalid value logs a warning and falls back to the default.
+
+| Variable | Default | Description |
 | --- | --- | --- |
-| Colors, font, spacing, icons | `config/Theme.qml` | — |
-| Weather location | `services/Weather.qml` | `latitude`, `longitude` |
-| Weather units | `services/Weather.qml` | `temperatureUnit`, `windSpeedUnit`, `precipitationUnit` |
-| Idle lock / suspend (seconds) | `services/Idle.qml` | `lockTimeout`, `screenOffTimeout` |
-| Wallpaper directory | `services/Wallpaper.qml` | `currentDirectory` |
-| Monitor watched for tags | `services/Mango.qml` | `DP-1` in the `mmsg` command |
-| CPU temperature sensor | `services/SystemMonitor.qml` | `/sys/class/hwmon/hwmon3/temp1_input` |
-| Visualizer | `config/cava.conf` | — |
+| `VOYAGER_MONITOR` | `DP-1` | Output whose tags the bar shows |
+| `VOYAGER_WALLPAPER_DIR` | `~/wallpapers` | Folder the wallpaper picker opens |
+| `VOYAGER_CPU_TEMP_SENSOR` | `/sys/class/hwmon/hwmon3/temp1_input` | CPU temperature file |
+| `VOYAGER_FONT` | `BlexMono Nerd Font` | Font family (must be a Nerd Font for icons) |
+| `VOYAGER_LATITUDE` | `51.48` | Weather location, `-90` to `90` (default is Greenwich, London) |
+| `VOYAGER_LONGITUDE` | `0.00` | Weather location, `-180` to `180` |
+| `VOYAGER_TEMPERATURE_UNIT` | `fahrenheit` | `celsius` or `fahrenheit` |
+| `VOYAGER_WIND_SPEED_UNIT` | `kmh` | `kmh`, `ms`, `mph` or `kn` |
+| `VOYAGER_PRECIPITATION_UNIT` | `mm` | `mm` or `inch` |
+| `VOYAGER_LOCK_TIMEOUT` | `600` | Seconds idle before locking |
+| `VOYAGER_SUSPEND_TIMEOUT` | `900` | Seconds idle before suspending |
+
+Set them on the command that starts the shell, e.g. in your MangoWM autostart:
+
+```ini
+exec-once=env VOYAGER_MONITOR=HDMI-A-1 VOYAGER_TEMPERATURE_UNIT=celsius qs
+```
+
+Run `ls /sys/class/hwmon/*/name` and `cat` them to find your CPU sensor (`k10temp` on AMD, `coretemp` on Intel). Restart `qs` after changing a variable.
+
+### Theme and visualizer
+
+| Setting | File |
+| --- | --- |
+| Colors, spacing, icons | `config/Theme.qml` |
+| Visualizer | `config/cava.conf` |
 
 ## Keybinds
 
@@ -130,4 +150,3 @@ bind=SUPER,n,spawn,qs ipc call notifications toggle
 
 - [ ] **Laptop brightness.** `ddcutil-service` only reaches external monitors over DDC/CI, so built-in (`eDP`) panels get no brightness control. Route those through logind's `Session.SetBrightness("backlight", …)` and read `/sys/class/backlight/<dev>/` instead.
 - [ ] **Per-monitor brightness.** The slider always targets ddcutil display 1. Match each screen to its display by EDID (model/serial) and control the one the panel is open on.
-- [ ] **Environment variables.** Move machine-specific settings (monitor, wallpaper dir, weather location/units, idle timeouts, CPU temp sensor, font) to `VOYAGER_*` env vars with defaults.

@@ -10,7 +10,7 @@ Singleton {
     readonly property color buttonColorHovered: Qt.rgba(1, 1, 1, 0.15)
     readonly property color text: "white"
 
-    readonly property string fontFamily: "BlexMono Nerd Font"
+    readonly property string fontFamily: Env.font
     readonly property int fontSize: 16
 
     readonly property int barHeight: 40

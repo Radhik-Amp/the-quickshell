@@ -1,5 +1,6 @@
 pragma Singleton
 
+import qs.config
 import Quickshell.Wayland
 import Quickshell
 import QtQuick
@@ -9,8 +10,8 @@ Singleton {
 
     property bool caffeine: false
 
-    property int lockTimeout: 600
-    property int screenOffTimeout: 900
+    property int lockTimeout: Env.lockTimeout
+    property int screenOffTimeout: Env.suspendTimeout
     property var suspendCmd: ["systemctl", "suspend"]
 
     IdleMonitor {

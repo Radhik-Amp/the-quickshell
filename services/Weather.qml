@@ -8,13 +8,13 @@ import QtQuick
 Singleton {
     id: root
 
-    property real latitude: 42.36
-    property real longitude: -71.06
+    property real latitude: Env.latitude
+    property real longitude: Env.longitude
 
     // adjustable values -- will add a controller soon
-    property string temperatureUnit: "fahrenheit" // you can use either celsius or fahrenheit
-    property string windSpeedUnit: "kmh" // kmh, ms, mph, kn
-    property string precipitationUnit: "mm" // mm, inch
+    property string temperatureUnit: Env.temperatureUnit
+    property string windSpeedUnit: Env.windSpeedUnit
+    property string precipitationUnit: Env.precipitationUnit
 
     property int refreshInterval: 15 * 60 * 1000
 
