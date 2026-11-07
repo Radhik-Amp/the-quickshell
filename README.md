@@ -85,8 +85,8 @@ qs
 To launch both on login, add them to your MangoWM autostart (`~/.config/mango/config.conf`):
 
 ```ini
-exec-once=awww-daemon
-exec-once=qs
+exec_once=awww-daemon
+exec_once=qs
 ```
 
 ## Configuration
@@ -99,7 +99,7 @@ Machine-specific settings come from `VOYAGER_*` environment variables, read when
 | --- | --- | --- |
 | `VOYAGER_MONITOR` | `DP-1` | Output whose tags the bar shows |
 | `VOYAGER_WALLPAPER_DIR` | `~/wallpapers` | Folder the wallpaper picker opens |
-| `VOYAGER_CPU_TEMP_SENSOR` | `/sys/class/hwmon/hwmon3/temp1_input` | CPU temperature file |
+| `VOYAGER_CPU_TEMP_SENSOR` | auto-detected | CPU temperature file, only needed if detection picks the wrong sensor or none |
 | `VOYAGER_FONT` | `BlexMono Nerd Font` | Font family (must be a Nerd Font for icons) |
 | `VOYAGER_LATITUDE` | `51.48` | Weather location, `-90` to `90` (default is Greenwich, London) |
 | `VOYAGER_LONGITUDE` | `0.00` | Weather location, `-180` to `180` |
@@ -112,10 +112,10 @@ Machine-specific settings come from `VOYAGER_*` environment variables, read when
 Set them on the command that starts the shell, e.g. in your MangoWM autostart:
 
 ```ini
-exec-once=env VOYAGER_MONITOR=HDMI-A-1 VOYAGER_TEMPERATURE_UNIT=celsius qs
+exec_once=env VOYAGER_MONITOR=HDMI-A-1 VOYAGER_TEMPERATURE_UNIT=celsius qs
 ```
 
-Run `ls /sys/class/hwmon/*/name` and `cat` them to find your CPU sensor (`k10temp` on AMD, `coretemp` on Intel). Restart `qs` after changing a variable.
+The CPU sensor is found by driver name (`k10temp`/`zenpower` on AMD, `coretemp` on Intel, `cpu_thermal` on ARM). To pick one by hand, list them with `grep . /sys/class/hwmon/*/name` and point the variable at that folder's `temp1_input`. Restart `qs` after changing a variable.
 
 ### Theme and visualizer
 

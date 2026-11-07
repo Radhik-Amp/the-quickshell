@@ -11,7 +11,7 @@ Singleton {
 
     readonly property string monitor: envString("VOYAGER_MONITOR", "DP-1")
     readonly property string wallpaperDir: envPath("VOYAGER_WALLPAPER_DIR", "~/wallpapers")
-    readonly property string cpuTempSensor: envPath("VOYAGER_CPU_TEMP_SENSOR", "/sys/class/hwmon/hwmon3/temp1_input")
+    readonly property string cpuTempSensor: envPath("VOYAGER_CPU_TEMP_SENSOR", "") // empty means auto-detect (see SystemMonitor)
     readonly property string font: envString("VOYAGER_FONT", "BlexMono Nerd Font")
 
     readonly property real latitude: envNumber("VOYAGER_LATITUDE", 51.48, -90, 90)
