@@ -28,9 +28,10 @@
 
 ### 1. Install dependencies
 
-**Fedora**
+**Fedora** (awww is in [Terra](https://terra.fyralabs.com), ddcutil-service is in a COPR)
 
 ```sh
+sudo dnf install --nogpgcheck --repofrompath 'terra,https://repos.fyralabs.com/terra$releasever' terra-release
 sudo dnf copr enable hopsayer/ddcutil-service
 sudo dnf install quickshell awww cava ddcutil-service NetworkManager tuned-ppd
 ```
@@ -43,7 +44,7 @@ sudo pacman -S cava ddcutil networkmanager power-profiles-daemon
 ```
 
 > [!NOTE]
-> Package names vary by distro. If yours doesn't package Quickshell, follow the [Quickshell install guide](https://quickshell.org/docs/guide/install-setup).
+> On other distros, package names vary and Quickshell, awww or ddcutil-service may not be packaged at all. Install Quickshell with its [install guide](https://quickshell.org/docs/guide/install-setup), and build awww and ddcutil-service from the sources linked in [Requirements](#requirements).
 
 ### 2. Allow brightness control
 
