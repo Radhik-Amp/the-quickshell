@@ -18,8 +18,7 @@ Singleton {
     property string tempSensor: Env.cpuTempSensor
 
     // First CPU sensor found, by driver: AMD, AMD (zenpower), Intel, ARM.
-    // Prefers the package/die reading, else the driver's first input.
-    // hwmonN numbers depend on driver load order, so we match on name.
+    // hwmonN numbers depend on driver load order so it matches by name
     Process {
         id: detectSensor
         command: ["sh", "-c", `
