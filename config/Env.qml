@@ -1,13 +1,27 @@
 pragma Singleton
 
 import Quickshell
+import Quickshell.Io
 import QtQuick
 
-// Machine-specific settings, read from VOYAGER_* environment variables when
-// the shell starts. Unset values use the defaults below; invalid values log a
-// warning and fall back to the default too.
+// Machine-specific settings, read once when the shell starts. Each VOYAGER_*
+// value comes from, in order: the environment, the settings file
+// (~/.config/voyager/env), then the defaults below. Invalid values log a
+// warning and fall back to the default.
 Singleton {
     id: root
+
+    readonly property string home: Quickshell.env("HOME")
+    readonly property string settingsPath: (Quickshell.env("XDG_CONFIG_HOME") || home + "/.config") + "/voyager/env"
+    readonly property var fileValues: parse(settingsFile.text())
+    property var seen: ({})
+
+    FileView {
+        id: settingsFile
+        path: root.settingsPath
+        blockLoading: true
+        printErrors: false
+    }
 
     readonly property string monitor: envString("VOYAGER_MONITOR", "DP-1")
     readonly property string wallpaperDir: envPath("VOYAGER_WALLPAPER_DIR", "~/wallpapers")
@@ -24,14 +38,46 @@ Singleton {
     readonly property int lockTimeout: envNumber("VOYAGER_LOCK_TIMEOUT", 600, 1, Infinity, true)
     readonly property int suspendTimeout: envNumber("VOYAGER_SUSPEND_TIMEOUT", 900, 1, Infinity, true)
 
-    function raw(name) {
+    function fromEnv(name) {
         const value = Quickshell.env(name)
         return value === undefined || value === null ? "" : String(value).trim()
     }
 
+    function raw(name) {
+        seen[name] = true
+        return fromEnv(name) || (fileValues[name] ?? "")
+    }
+
     function invalid(name, value, fallback, expected) {
-        console.warn(`env: ${name}="${value}" is not ${expected}, using ${fallback}`)
+        const source = fromEnv(name) ? "environment" : settingsPath
+        console.warn(`settings: ${name}="${value}" (from ${source}) is not ${expected}, using ${fallback}`)
         return fallback
+    }
+
+    // NAME=value per line, like a shell env file: blank lines, # comments,
+    // "quoted" or 'quoted' values and a leading `export` are all fine.
+    function parse(text) {
+        const values = {}
+        const lines = (text ?? "").split("\n")
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i].trim()
+            if (!line || line.startsWith("#")) continue
+
+            const m = line.match(/^(?:export\s+)?([A-Za-z_]\w*)\s*=\s*(.*)$/)
+            if (!m) {
+                console.warn(`settings: ${settingsPath}:${i + 1}: expected NAME=value, got "${line}"`)
+                continue
+            }
+            const quoted = m[2].match(/^(["'])(.*?)\1\s*(?:#.*)?$/)
+            values[m[1]] = quoted ? quoted[2] : m[2].replace(/\s+#.*$/, "").trim()
+        }
+        return values
+    }
+
+    Component.onCompleted: {
+        for (const name in fileValues)
+            if (!seen[name])
+                console.warn(`settings: unknown setting ${name} in ${settingsPath}`)
     }
 
     function envString(name, fallback) {
@@ -39,7 +85,6 @@ Singleton {
     }
 
     function envPath(name, fallback) {
-        const home = Quickshell.env("HOME")
         return envString(name, fallback).replace(/^~(?=\/|$)/, home).replace(/(.)\/+$/, "$1")
     }
 
