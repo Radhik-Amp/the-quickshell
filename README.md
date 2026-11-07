@@ -92,11 +92,27 @@ exec_once=qs
 
 ## Configuration
 
-### Environment variables
+### Settings file
 
-Machine-specific settings come from `VOYAGER_*` environment variables, read when the shell starts. Anything unset uses the default; an invalid value logs a warning and falls back to the default.
+Machine-specific settings live in `~/.config/voyager/env` (or `$XDG_CONFIG_HOME/voyager/env`), outside the repo, so pulling updates or re-cloning never touches them. The shell reads it once at startup, so restart `qs` after editing. The file is optional; anything you leave out uses the default.
 
-| Variable | Default | Description |
+```sh
+mkdir -p ~/.config/voyager
+$EDITOR ~/.config/voyager/env
+```
+
+Write one `NAME=value` per line. `#` comments and quoted values are fine:
+
+```sh
+# ~/.config/voyager/env
+VOYAGER_MONITOR=HDMI-A-1
+VOYAGER_LATITUDE=40.71
+VOYAGER_LONGITUDE=-74.01
+VOYAGER_TEMPERATURE_UNIT=celsius
+VOYAGER_WALLPAPER_DIR="~/Pictures/Wallpapers"
+```
+
+| Setting | Default | Description |
 | --- | --- | --- |
 | `VOYAGER_MONITOR` | `DP-1` | Output whose tags the bar shows |
 | `VOYAGER_WALLPAPER_DIR` | `~/wallpapers` | Folder the wallpaper picker opens |
@@ -110,13 +126,11 @@ Machine-specific settings come from `VOYAGER_*` environment variables, read when
 | `VOYAGER_LOCK_TIMEOUT` | `600` | Seconds idle before locking |
 | `VOYAGER_SUSPEND_TIMEOUT` | `900` | Seconds idle before suspending |
 
-Set them on the command that starts the shell, e.g. in your MangoWM autostart:
+Invalid values, unknown names and malformed lines are reported in the `qs` log, and the setting falls back to its default.
 
-```ini
-exec_once=env VOYAGER_MONITOR=HDMI-A-1 VOYAGER_TEMPERATURE_UNIT=celsius qs
-```
+Each setting can also be passed as an environment variable of the same name, which wins over the file. That's handy for a one-off test, e.g. `VOYAGER_MONITOR=eDP-1 qs`.
 
-The CPU sensor is found by driver name (`k10temp`/`zenpower` on AMD, `coretemp` on Intel, `cpu_thermal` on ARM). To pick one by hand, list them with `grep . /sys/class/hwmon/*/name` and point the variable at that folder's `temp1_input`. Restart `qs` after changing a variable.
+The CPU sensor is found by driver name (`k10temp`/`zenpower` on AMD, `coretemp` on Intel, `cpu_thermal` on ARM). To pick one by hand, list them with `grep . /sys/class/hwmon/*/name` and set `VOYAGER_CPU_TEMP_SENSOR` to that folder's `temp1_input`.
 
 ### Theme and visualizer
 
