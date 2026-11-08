@@ -23,7 +23,7 @@ Singleton {
         printErrors: false
     }
 
-    readonly property string monitor: envString("VOYAGER_MONITOR", "DP-1")
+    readonly property string monitor: envString("VOYAGER_MONITOR", "") // empty means auto-detect (see Mango)
     readonly property string wallpaperDir: envPath("VOYAGER_WALLPAPER_DIR", "~/wallpapers")
     readonly property string cpuTempSensor: envPath("VOYAGER_CPU_TEMP_SENSOR", "") // empty means auto-detect (see SystemMonitor)
     readonly property string font: envString("VOYAGER_FONT", "BlexMono Nerd Font")
