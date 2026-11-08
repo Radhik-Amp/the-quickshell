@@ -83,8 +83,8 @@ DropdownPanel {
                     readonly property var wifi: Networking.devices.values.find(d => d.type === DeviceType.Wifi)
                     readonly property var wifiNet: wifi?.networks.values.find(n => n.connected)
                     icon: Ethernet.connected ? "\u{F0200}" : wifiNet ? "\u{F05A9}" : "\u{F05AA}"
-                    label: "network"
-                    status: Ethernet.connected ? "wired"
+                    label: "Network"
+                    status: Ethernet.connected ? "Wired"
                           : wifiNet ? wifiNet.name
                           : Networking.wifiEnabled ? "not connected" : "off" 
                     active: Networking.wifiEnabled
@@ -98,10 +98,10 @@ DropdownPanel {
                                                    : 0
                     Layout.fillWidth: true
                     icon: "\u{F00AF}"
-                    label: "bluetooth"
-                    status: !adapter.enabled ? "off"
-                          : connected > 0 ? connected + " connected"
-                          : "on"
+                    label: "Bluetooth"
+                    status: !adapter.enabled ? "Off"
+                          : connected > 0 ? connected + " Connected"
+                          : "On"
                     active: adapter?.enabled ?? false
                     onClicked: if (adapter) adapter.enabled = !adapter.enabled
                 }
@@ -111,8 +111,8 @@ DropdownPanel {
 
                     Layout.fillWidth: true
                     icon: "\u{F0594}"
-                    label: "dnd"
-                    status: NotificationService.dnd ? "on" : "off"
+                    label: "Focus"
+                    status: NotificationService.dnd ? "On" : "Off"
                     active: NotificationService.dnd
                     onClicked: NotificationService.dnd = !NotificationService.dnd
                 }
@@ -120,8 +120,8 @@ DropdownPanel {
                 ControlToggle {
                     Layout.fillWidth: true
                     icon: "\u{F0176}"
-                    label: "caffeinated"
-                    status: Idle.caffeine ? "on" : "off"
+                    label: "Caffeinated"
+                    status: Idle.caffeine ? "On" : "Off"
                     active: Idle.caffeine
                     onClicked: Idle.caffeine = !Idle.caffeine
                 }

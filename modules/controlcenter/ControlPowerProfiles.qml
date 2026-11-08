@@ -24,9 +24,9 @@ Rectangle {
         Repeater {
             id: profiles
             model: [
-                { label: "eco", value: PowerProfile.PowerSaver },
-                { label: "normal", value: PowerProfile.Balanced },
-                { label: "boost", value: PowerProfile.Performance }
+                { label: "Eco", value: PowerProfile.PowerSaver },
+                { label: "Normal", value: PowerProfile.Balanced },
+                { label: "Boost", value: PowerProfile.Performance }
             ]
 
             Rectangle {

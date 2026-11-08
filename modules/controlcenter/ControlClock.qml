@@ -28,7 +28,7 @@ ColumnLayout {
         Layout.fillHeight: true
 
         Repeater {
-            model: ["[s]", "[m]", "[t]", "[w]", "[t]", "[f]", "[s]"]
+            model: ["[S]", "[M]", "[T]", "[W]", "[T]", "[F]", "[S]"]
 
             StyledText {
                 Layout.alignment: Qt.AlignHCenter
