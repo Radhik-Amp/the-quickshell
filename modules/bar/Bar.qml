@@ -9,6 +9,8 @@ import QtQuick.Layouts
 PanelWindow {
     id: root
 
+    screen: Quickshell.screens.find(s => s.name === Mango.monitor) ?? null
+
     IdleInhibitor {
         window: root
         enabled: Idle.caffeine

@@ -8,6 +8,9 @@ import QtQuick
 Singleton {
     id: root
 
+    // Output whose tags the bar shows: VOYAGER_MONITOR if set, otherwise the
+    // first active monitor Mango reports. Empty until detection finishes.
+    property string monitor: Env.monitor
     readonly property string layout: tags.find(t => t.is_active)?.layout ?? ""
     property var tags: []
     property int pendingTag: -1
@@ -25,10 +28,41 @@ Singleton {
         }
     }
 
+    function start() {
+        if (Env.monitor)
+            tagProc.running = true
+        else
+            monitorProc.running = true
+    }
+
+    Component.onCompleted: start()
+
+    Process {
+        id: monitorProc
+        command: ["mmsg", "get", "all-monitors"]
+
+        stdout: StdioCollector {
+            onStreamFinished: {
+                try {
+                    const monitors = JSON.parse(text).monitors ?? []
+                    const pick = monitors.find(m => m.active) ?? monitors[0]
+                    if (pick) {
+                        root.monitor = pick.name
+                        tagProc.running = true
+                        return
+                    }
+                    console.warn("mango: no monitors reported, retrying")
+                } catch (e) {
+                    console.warn("mango: couldn't read monitors:", e)
+                }
+                restartTimer.start()
+            }
+        }
+    }
+
     Process {
         id: tagProc
-        command: ["stdbuf", "-oL", "mmsg", "watch", "tags", Env.monitor]
-        running: true
+        command: ["stdbuf", "-oL", "mmsg", "watch", "tags", root.monitor]
 
         stdout: SplitParser {
             onRead: line => {
@@ -46,7 +80,7 @@ Singleton {
     Timer {
         id: restartTimer
         interval: 1000
-        onTriggered: tagProc.running = true
+        onTriggered: root.start()
     }
 
     Timer {
