@@ -2,7 +2,7 @@
 
 # Voyager Shell
 
-**A lightweight, config-driven desktop shell for Wayland, built with [Quickshell](https://quickshell.org)**
+**A lightweight, config-driven desktop shell for [MangoWM](https://github.com/DreamMaoMao/mangowc), built with [Quickshell](https://quickshell.org)**
 
 [Requirements](#requirements) • [Installation](#installation) • [Configuration](#configuration) • [Keybinds](#keybinds)
 
@@ -14,8 +14,8 @@
 
 | Dependency | Used for |
 | --- | --- |
+| [MangoWM](https://github.com/DreamMaoMao/mangowc) | The compositor; `mmsg` (bundled with it) provides tags, layouts and monitor detection |
 | [Quickshell](https://quickshell.org) | The shell runtime |
-| Wayland compositor | Tags only support [MangoWM](https://github.com/DreamMaoMao/mangowc) for now |
 | [awww](https://codeberg.org/LGFae/awww) | Wallpapers |
 | [cava](https://github.com/karlstav/cava) | Media center audio visualizer |
 | [ddcutil-service](https://github.com/digitaltrails/ddcutil-service) | External monitor brightness over D-Bus (uses [ddcutil](https://www.ddcutil.com)) |
@@ -27,6 +27,8 @@
 ## Installation
 
 ### 1. Install dependencies
+
+These commands assume Mango is already installed; see [its README](https://github.com/DreamMaoMao/mangowc) if not.
 
 **Fedora** (awww is in [Terra](https://terra.fyralabs.com), ddcutil-service is in a COPR)
 
@@ -83,7 +85,7 @@ awww-daemon &
 qs
 ```
 
-To launch both on login, add them to your MangoWM autostart (`~/.config/mango/config.conf`):
+To launch both on login, add them to Mango's autostart (`~/.config/mango/config.conf`):
 
 ```ini
 exec_once=awww-daemon
@@ -105,7 +107,6 @@ Write one `NAME=value` per line. `#` comments and quoted values are fine:
 
 ```sh
 # ~/.config/voyager/env
-VOYAGER_MONITOR=HDMI-A-1
 VOYAGER_LATITUDE=40.71
 VOYAGER_LONGITUDE=-74.01
 VOYAGER_TEMPERATURE_UNIT=celsius
@@ -114,7 +115,7 @@ VOYAGER_WALLPAPER_DIR="~/Pictures/Wallpapers"
 
 | Setting | Default | Description |
 | --- | --- | --- |
-| `VOYAGER_MONITOR` | `DP-1` | Output whose tags the bar shows |
+| `VOYAGER_MONITOR` | auto-detected | Output the bar and its tags go on, e.g. `HDMI-A-1`. Only needed to pick a different monitor than the detected one |
 | `VOYAGER_WALLPAPER_DIR` | `~/wallpapers` | Folder the wallpaper picker opens |
 | `VOYAGER_CPU_TEMP_SENSOR` | auto-detected | CPU temperature file, only needed if detection picks the wrong sensor or none |
 | `VOYAGER_FONT` | `BlexMono Nerd Font` | Font family (must be a Nerd Font for icons) |
@@ -130,6 +131,8 @@ Invalid values, unknown names and malformed lines are reported in the `qs` log, 
 
 Each setting can also be passed as an environment variable of the same name, which wins over the file. That's handy for a one-off test, e.g. `VOYAGER_MONITOR=eDP-1 qs`.
 
+The shell detects the monitor by asking Mango (`mmsg get all-monitors`) and using the first active output. Run that command to see your output names.
+
 The CPU sensor is found by driver name (`k10temp`/`zenpower` on AMD, `coretemp` on Intel, `cpu_thermal` on ARM). To pick one by hand, list them with `grep . /sys/class/hwmon/*/name` and set `VOYAGER_CPU_TEMP_SENSOR` to that folder's `temp1_input`.
 
 ### Theme and visualizer
@@ -141,7 +144,7 @@ The CPU sensor is found by driver name (`k10temp`/`zenpower` on AMD, `coretemp` 
 
 ## Keybinds
 
-The shell exposes IPC commands you can bind to keys in your compositor.
+The shell exposes IPC commands you can bind to keys in Mango.
 
 | Command | Action |
 | --- | --- |
@@ -153,7 +156,7 @@ The shell exposes IPC commands you can bind to keys in your compositor.
 | `qs ipc call panels toggle <name>` | Toggle a panel: `control`, `media` or `weather` |
 | `qs ipc call panels close` | Close any open panel |
 
-Example MangoWM binds:
+Example binds for `~/.config/mango/config.conf`:
 
 ```ini
 bind=SUPER,l,spawn,qs ipc call lockscreen lock
