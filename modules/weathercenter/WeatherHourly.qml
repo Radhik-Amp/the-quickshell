@@ -26,7 +26,7 @@ RowLayout {
             StyledText {
                 Layout.fillWidth: true
                 horizontalAlignment: Text.AlignHCenter
-                text: hour.index === 0 ? "now" : Qt.formatDateTime(hour.modelData.time, "hAP").toLowerCase()
+                text: hour.index === 0 ? "Now" : Qt.formatDateTime(hour.modelData.time, "hAP")
                 color: Theme.textMuted
                 font.pixelSize: Theme.fontSize - 3
             }

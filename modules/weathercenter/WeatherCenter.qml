@@ -19,7 +19,7 @@ DropdownPanel {
         Layout.fillWidth: true
         visible: !Weather.ready
         horizontalAlignment: Text.AlignHCenter
-        text: Weather.error || "loading…"
+        text: Weather.error || "Loading…"
         color: Theme.textMuted
     }
 
@@ -46,18 +46,18 @@ DropdownPanel {
 
             StyledText {
                 Layout.fillWidth: true
-                text: Weather.description.toLowerCase()
+                text: Weather.description
                 elide: Text.ElideRight
             }
             StyledText {
                 Layout.fillWidth: true
-                text: "feels like " + Math.round(Weather.apparentTemperature) + "°"
+                text: "Feels like " + Math.round(Weather.apparentTemperature) + "°"
                 color: Theme.textMuted
                 font.pixelSize: 14
             }
             StyledText {
                 Layout.fillWidth: true
-                text: "updated " + Qt.formatDateTime(Weather.lastUpdated, "h:mm AP").toLowerCase()
+                text: "Updated " + Qt.formatDateTime(Weather.lastUpdated, "h:mm AP")
                 color: Theme.textMuted
                 font.pixelSize: 14
             }
@@ -85,37 +85,37 @@ DropdownPanel {
         WeatherDetail {
             Layout.fillWidth: true
             icon: Theme.iconHumidity
-            label: "humidity"
+            label: "Humidity"
             value: Weather.humidity + "%"
         }
         WeatherDetail {
             Layout.fillWidth: true
             icon: Theme.iconWind
-            label: "wind"
+            label: "Wind"
             value: Math.round(Weather.windSpeed) + " " + Weather.windSpeedUnitLabel + " " + root.windDir
         }
         WeatherDetail {
             Layout.fillWidth: true
             icon: Theme.iconWind
-            label: "gusts"
+            label: "Gusts"
             value: Math.round(Weather.windGusts) + " " + Weather.windSpeedUnitLabel
         }
         WeatherDetail {
             Layout.fillWidth: true
             icon: Theme.iconGauge
-            label: "pressure"
+            label: "Pressure"
             value: Math.round(Weather.pressure) + " " + (Weather.units.pressure_msl ?? "")
         }
         WeatherDetail {
             Layout.fillWidth: true
             icon: Theme.iconCloud
-            label: "clouds"
+            label: "Clouds"
             value: Weather.cloudCover + "%"
         }
         WeatherDetail {
             Layout.fillWidth: true
             icon: Theme.iconUmbrella
-            label: "precip"
+            label: "Precip"
             value: Weather.precipitation + " " + (Weather.units.precipitation ?? "")
         }
     }

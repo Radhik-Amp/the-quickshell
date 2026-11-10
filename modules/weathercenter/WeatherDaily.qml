@@ -24,8 +24,8 @@ ColumnLayout {
             spacing: Theme.spaceSm
 
             FixedWidthText {
-                text: day.index === 0 ? "today" : Qt.formatDateTime(day.modelData.date, "ddd").toLowerCase()
-                widest: "today"
+                text: day.index === 0 ? "Today" : Qt.formatDateTime(day.modelData.date, "ddd")
+                widest: "Today"
             }
             FixedWidthText {
                 text: day.modelData.icon
