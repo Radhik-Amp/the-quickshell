@@ -10,6 +10,9 @@ RowLayout {
     id: root
     spacing: 0
 
+    readonly property int popThreshold: 10
+    readonly property bool anyPrecip: Weather.hourly.some(h => h.pop >= popThreshold)
+
     Repeater {
         model: Weather.hourly
 
@@ -42,12 +45,15 @@ RowLayout {
                 text: Math.round(hour.modelData.temp) + "°"
             }
             StyledText {
+                readonly property bool wet: hour.modelData.pop >= root.popThreshold
+
                 Layout.fillWidth: true
                 horizontalAlignment: Text.AlignHCenter
-                text: hour.modelData.pop + "%"
+                text: wet ? hour.modelData.pop + "%" : "–"
                 color: Theme.textMuted
                 font.pixelSize: Theme.fontSize - 3
-                opacity: hour.modelData.pop > 0 ? 1 : 0
+                visible: root.anyPrecip
+                opacity: wet ? 1 : 0.4
             }
         }
     }
