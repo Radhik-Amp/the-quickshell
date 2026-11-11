@@ -1,7 +1,11 @@
 import QtQuick
+import QtQuick.Layouts
 
 StyledText {
     id: root
+
+    Layout.preferredWidth: Math.ceil(ink.tightBoundingRect.width)
+    horizontalAlignment: Text.AlignHCenter
 
     TextMetrics {
         id: ink
