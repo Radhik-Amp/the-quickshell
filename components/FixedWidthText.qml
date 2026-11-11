@@ -3,6 +3,7 @@ import QtQuick.Layouts
 
 StyledText {
     id: root
+    // Text whose minimum width fits the widest of `widest`, so values don't jitter.
 
     required property var widest
 

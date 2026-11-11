@@ -5,11 +5,9 @@ import Quickshell.Wayland
 import QtQuick
 import QtQuick.Layouts
 
-// Shared frame for dropdown panels hanging off the bar: slide-down clip,
-// tether line, background, border, and Escape-to-close. Open state comes
-// from Panels.active === name. Children are laid out in a ColumnLayout.
 PanelWindow {
     id: root
+    // Slide-down panel frame hanging off the bar, opened via Panels.active.
 
     required property string name
     readonly property bool shown: Panels.active === name

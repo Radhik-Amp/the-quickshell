@@ -3,6 +3,7 @@ import QtQuick.Layouts
 
 StyledText {
     id: root
+    // Icon text centered on its drawn ink rather than its advance box.
 
     property string inkReference: text
 

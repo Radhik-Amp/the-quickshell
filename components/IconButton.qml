@@ -4,6 +4,7 @@ import QtQuick
 
 Rectangle {
     id: root
+    // Square icon button with hover highlight and a clicked() signal.
     property alias text: label.text
     property alias textColor: label.color
     property alias font: label.font

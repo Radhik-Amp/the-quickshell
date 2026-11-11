@@ -4,6 +4,7 @@ import qs.config
 
 Rectangle {
     id: root
+    // Button that runs `command`, optionally only after holding for holdDuration ms.
 
     property string label
     property list<string> command
