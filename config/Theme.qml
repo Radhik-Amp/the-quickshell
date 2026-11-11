@@ -86,5 +86,7 @@ Singleton {
     readonly property string iconCloud: "\u{F015F}"
     readonly property string iconUmbrella: "\u{F054A}"
     readonly property string iconRefresh: "\u{F0450}"
+    readonly property string iconFolder: "\u{F024B}"
+    readonly property string iconCheck: "\u{F012C}"
 }
 
