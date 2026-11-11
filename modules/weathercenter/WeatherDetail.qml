@@ -26,7 +26,8 @@ Rectangle {
         }
         spacing: Theme.spaceSm
 
-        StyledText {
+        GlyphText {
+            Layout.preferredWidth: font.pixelSize
             text: root.icon
             font.pixelSize: Theme.fontSize + 4
         }
