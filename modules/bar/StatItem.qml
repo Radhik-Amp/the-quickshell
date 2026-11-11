@@ -9,15 +9,25 @@ RowLayout {
     required property string value
     required property string widest
     property var iconWidest: icon
+    property string iconReference: icon
     property bool dimmed: false
     property int valueAlignment: Text.AlignRight
 
     spacing: Theme.spaceSm
 
-    FixedWidthText {
+    GlyphText {
+        id: iconText
+        Layout.minimumWidth: {
+            iconMetrics.font
+            return Math.max(...[].concat(root.iconWidest).map(s => Math.ceil(iconMetrics.boundingRect(s).width)))
+        }
         text: root.icon
-        widest: root.iconWidest
-        horizontalAlignment: Text.AlignHCenter
+        inkReference: root.iconReference
+
+        FontMetrics {
+            id: iconMetrics
+            font: iconText.font
+        }
     }
 
     FixedWidthText {

@@ -10,6 +10,7 @@ StatItem {
         : Theme.iconVolumeZero
     iconWidest: [Theme.iconVolumeMuted, Theme.iconVolumeHigh, Theme.iconVolumeMedium,
                  Theme.iconVolumeLow, Theme.iconVolumeZero]
+    iconReference: Theme.iconVolumeHigh
     value: Audio.volume + "%"
     widest: "100%"
     dimmed: Audio.muted

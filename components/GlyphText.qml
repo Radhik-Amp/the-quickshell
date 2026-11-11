@@ -4,13 +4,15 @@ import QtQuick.Layouts
 StyledText {
     id: root
 
+    property string inkReference: text
+
     Layout.preferredWidth: Math.ceil(ink.tightBoundingRect.width)
     horizontalAlignment: Text.AlignHCenter
 
     TextMetrics {
         id: ink
         font: root.font
-        text: root.text
+        text: root.inkReference
     }
 
     transform: Translate {
