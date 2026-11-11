@@ -27,9 +27,9 @@ ColumnLayout {
                 text: day.index === 0 ? "Today" : Qt.formatDateTime(day.modelData.date, "ddd")
                 widest: "Today"
             }
-            FixedWidthText {
+            GlyphText {
+                Layout.minimumWidth: implicitWidth
                 text: day.modelData.icon
-                widest: text
                 horizontalAlignment: Text.AlignHCenter
                 font.pixelSize: Theme.fontSize + 2
             }

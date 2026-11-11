@@ -28,7 +28,7 @@ DropdownPanel {
         visible: Weather.ready
         spacing: Theme.padding
 
-        StyledText {
+        GlyphText {
             text: Weather.icon
             font.pixelSize: 48
         }

@@ -33,16 +33,24 @@ RowLayout {
                 color: Theme.textMuted
                 font.pixelSize: Theme.fontSize - 3
             }
-            StyledText {
+            GlyphText {
                 Layout.fillWidth: true
                 horizontalAlignment: Text.AlignHCenter
                 text: hour.modelData.icon
                 font.pixelSize: Theme.fontSize + 6
             }
             StyledText {
+                id: temp
                 Layout.fillWidth: true
                 horizontalAlignment: Text.AlignHCenter
                 text: Math.round(hour.modelData.temp) + "°"
+
+                TextMetrics {
+                    id: degree
+                    font: temp.font
+                    text: "°"
+                }
+                transform: Translate { x: Math.round(degree.advanceWidth / 2) }
             }
             StyledText {
                 readonly property bool wet: hour.modelData.pop >= root.popThreshold
