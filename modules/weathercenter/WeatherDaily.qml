@@ -12,6 +12,17 @@ ColumnLayout {
 
     readonly property real span: Math.max(1, Weather.weekHigh - Weather.weekLow)
 
+    readonly property int iconWidth: {
+        iconMetrics.font
+        return Math.max(0, ...Weather.daily.map(d => Math.ceil(iconMetrics.boundingRect(d.icon).width)))
+    }
+
+    FontMetrics {
+        id: iconMetrics
+        font.family: Theme.fontFamily
+        font.pixelSize: Theme.fontSize + 2
+    }
+
     Repeater {
         model: Weather.daily
 
@@ -28,7 +39,7 @@ ColumnLayout {
                 widest: "Today"
             }
             GlyphText {
-                Layout.minimumWidth: implicitWidth
+                Layout.minimumWidth: root.iconWidth
                 text: day.modelData.icon
                 horizontalAlignment: Text.AlignHCenter
                 font.pixelSize: Theme.fontSize + 2
