@@ -9,12 +9,12 @@ import Quickshell.Services.Notifications
 import QtQuick
 import QtQuick.Layouts
 
-DropdownPanel {
+TetheredPanel {
     id: root
 
     name: "control"
     focusMode: WlrKeyboardFocus.Exclusive
-    implicitWidth: 540
+    panelWidth: 540
 
     SystemClock {
         id: clock
@@ -35,7 +35,7 @@ DropdownPanel {
         spacing: Theme.padding
 
         Rectangle {
-            Layout.preferredWidth: (root.implicitWidth - Theme.padding * 3) / 2 
+            Layout.preferredWidth: (root.panelWidth - Theme.padding * 3) / 2 
             Layout.fillHeight: true
             color: "transparent"
             radius: Theme.radius

@@ -7,14 +7,14 @@ import Quickshell.Services.Mpris
 import QtQuick
 import QtQuick.Layouts
 
-DropdownPanel {
+TetheredPanel {
     id: root
 
     readonly property var player: MediaCenterState.player
 
     name: "media"
     anchorX: Panels.positions.media ?? NaN
-    implicitWidth: 460
+    panelWidth: 460
     spacing: Theme.padding
 
     Timer {

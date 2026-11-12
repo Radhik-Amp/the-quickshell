@@ -4,14 +4,15 @@ import qs.services
 import QtQuick
 import QtQuick.Layouts
 
-DropdownPanel {
+TetheredPanel {
     id: root
 
     readonly property real gib: 1024 * 1024 * 1024
 
     name: "system"
     anchorX: Panels.positions.system ?? NaN
-    implicitWidth: 460
+    edgeReveal: true
+    panelWidth: 460
     spacing: Theme.padding
 
     SystemGraph {

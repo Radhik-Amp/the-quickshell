@@ -4,7 +4,7 @@ import qs.services
 import QtQuick
 import QtQuick.Layouts
 
-DropdownPanel {
+TetheredPanel {
     id: root
 
     readonly property var compass: ["N", "NE", "E", "SE", "S", "SW", "W", "NW"]
@@ -12,7 +12,7 @@ DropdownPanel {
 
     name: "weather"
     anchorX: Panels.positions.weather ?? NaN
-    implicitWidth: 460
+    panelWidth: 460
     spacing: Theme.padding
 
     StyledText {
