@@ -93,5 +93,6 @@ Singleton {
     readonly property string iconSwap: "\u{F04E1}"
     readonly property string iconDisk: "\u{F02CA}"
     readonly property string iconTasks: "\u{F0279}"
+    readonly property string iconExpand: "\u{F004C}"
 }
 

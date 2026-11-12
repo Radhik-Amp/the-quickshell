@@ -13,7 +13,8 @@ Scope {
     NotificationPanel {}
     ControlCenter {}
     LockScreen {}
-    WallpaperPicker {}
+    WallpaperPanel {}
+    WallpaperPreview {}
     MediaCenter {}
     WeatherCenter {}
     SystemCenter {}

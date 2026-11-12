@@ -15,13 +15,14 @@ Singleton {
     property var currentDirectory: Env.wallpaperDir
     readonly property var extensions: ["jpeg", "jpg", "png", "webp", "gif"]
 
-    property bool shown: false
+    property bool previewShown: false
     property int queryAttempts: 0
 
     IpcHandler {
         target: "wallpaper"
         function set(path: string): void { root.set(path) }
         function toggle(): void { root.toggle() }
+        function preview(): void { root.togglePreview() }
     }
 
     function setDirectory(text: string) {
@@ -55,7 +56,25 @@ Singleton {
     }
 
     function toggle() {
-        root.shown = !root.shown
+        Panels.toggle("wallpaper")
+    }
+
+    function togglePreview() {
+        if (root.previewShown) root.previewShown = false
+        else openPreview()
+    }
+
+    function openPreview() {
+        Panels.close()
+        root.previewShown = true
+    }
+
+    function fileUrl(path) {
+        return "file://" + path.split("/").map(encodeURIComponent).join("/")
+    }
+
+    function apply(path) {
+        if (path && !Object.values(root.currentPaths).includes(path)) set(path)
     }
 
     Process {

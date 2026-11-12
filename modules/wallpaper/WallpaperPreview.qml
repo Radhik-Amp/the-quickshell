@@ -5,7 +5,6 @@ import qs.components
 import qs.services
 import Quickshell
 import Quickshell.Wayland
-import Quickshell.Widgets
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Effects
@@ -14,7 +13,7 @@ import QtQuick.Layouts
 PanelWindow {
     id: root
 
-    readonly property bool shown: Wallpaper.shown
+    readonly property bool shown: Wallpaper.previewShown
 
     property real progress: shown ? 1 : 0
     Behavior on progress {
@@ -24,14 +23,6 @@ PanelWindow {
         }
     }
 
-    function fileUrl(path) {
-        return "file://" + path.split("/").map(encodeURIComponent).join("/")
-    }
-
-    function apply(path) {
-        if (path && !Object.values(Wallpaper.currentPaths).includes(path)) Wallpaper.set(path)
-    }
-
     onShownChanged: if (shown) Qt.callLater(() => {
         const i = Math.max(0, Wallpaper.entries.indexOf(Wallpaper.currentPaths[root.screen?.name]))
         grid.currentIndex = i
@@ -39,12 +30,10 @@ PanelWindow {
         grid.forceActiveFocus()
     })
 
-    // Window-wide, so Escape closes no matter which child (grid cell, path
-    // field) holds focus. The panel's Keys.onEscapePressed is the fallback.
     Shortcut {
         sequence: "Escape"
         enabled: root.shown
-        onActivated: Wallpaper.shown = false
+        onActivated: Wallpaper.previewShown = false
     }
 
     exclusionMode: ExclusionMode.Ignore
@@ -61,9 +50,7 @@ PanelWindow {
         bottom: true
     }
 
-    // Blurred copy of a wallpaper; two of these double-buffer the backdrop.
     component BlurLayer: Item {
-        // Kept as the string we built: Image.source normalizes it (e.g. %20 → space).
         property string url
         readonly property bool ready: image.status === Image.Ready
 
@@ -98,7 +85,7 @@ PanelWindow {
         // ready, so the old blur stays up meanwhile instead of exposing windows.
         readonly property string target: {
             const path = Wallpaper.currentPaths[root.screen?.name]
-            return path ? root.fileUrl(path) : ""
+            return path ? Wallpaper.fileUrl(path) : ""
         }
         property BlurLayer front: layerA
         readonly property BlurLayer back: front === layerA ? layerB : layerA
@@ -144,7 +131,7 @@ PanelWindow {
         }
 
         TapHandler {
-            onTapped: Wallpaper.shown = false
+            onTapped: Wallpaper.previewShown = false
         }
     }
 
@@ -161,7 +148,7 @@ PanelWindow {
         radius: Theme.radius
         border.width: Theme.borderWidth
         border.color: Theme.borderColor
-        Keys.onEscapePressed: Wallpaper.shown = false
+        Keys.onEscapePressed: Wallpaper.previewShown = false
 
         opacity: root.progress
         scale: root.shown ? 1 : 0.92
@@ -270,7 +257,7 @@ PanelWindow {
             GridView {
                 id: grid
 
-                // bleed is experimental right now - to fix the clipping of panel margins on hover
+                // "bleed" is experimental right now - to fix the clipping of panel margins on hover
                 readonly property real hoverScale: 1.03
                 readonly property int bleed: Math.ceil(contentColumn.width / 3 * (hoverScale - 1) / 2)
 
@@ -294,115 +281,28 @@ PanelWindow {
                 focus: true
                 keyNavigationEnabled: true
                 keyNavigationWraps: true
-                Keys.onReturnPressed: root.apply(Wallpaper.entries[currentIndex])
-                Keys.onEnterPressed: root.apply(Wallpaper.entries[currentIndex])
+                Keys.onReturnPressed: Wallpaper.apply(Wallpaper.entries[currentIndex])
+                Keys.onEnterPressed: Wallpaper.apply(Wallpaper.entries[currentIndex])
 
                 delegate: Item {
                     id: cell
                     required property string modelData
                     required property int index
 
-                    readonly property bool active: Object.values(Wallpaper.currentPaths).includes(modelData)
-                    readonly property bool current: GridView.isCurrentItem
-
                     width: grid.cellWidth
                     height: grid.cellHeight
-                    z: current ? 1 : 0
+                    z: GridView.isCurrentItem ? 1 : 0
 
-                    ClippingRectangle {
+                    WallpaperThumb {
                         anchors.fill: parent
                         anchors.margins: Theme.padding / 2
-                        radius: Theme.radius
-                        color: Theme.tagHover
-                        border.width: Theme.borderWidth
-                        border.color: cell.current ? Theme.borderColor
-                            : cell.active ? Theme.tagBorderActive
-                            : Theme.borderColorMuted
-
-                        scale: tap.pressed ? 0.97 : (cell.current ? grid.hoverScale : 1)
-                        Behavior on scale {
-                            NumberAnimation {
-                                duration: 150
-                                easing.type: Easing.OutCubic
-                            }
-                        }
-
-                        Image {
-                            id: thumb
-                            anchors.fill: parent
-                            source: root.fileUrl(cell.modelData)
-                            sourceSize: Qt.size(480, 270)
-                            asynchronous: true
-                            fillMode: Image.PreserveAspectCrop
-                            opacity: status === Image.Ready ? 1 : 0
-                            Behavior on opacity {
-                                NumberAnimation { duration: 200 }
-                            }
-                        }
-
-                        Rectangle {
-                            anchors {
-                                left: parent.left
-                                right: parent.right
-                                bottom: parent.bottom
-                            }
-                            height: caption.implicitHeight + Theme.spaceMd
-                            opacity: cell.current ? 1 : 0
-                            Behavior on opacity {
-                                NumberAnimation { duration: 150 }
-                            }
-                            gradient: Gradient {
-                                GradientStop { position: 0; color: "transparent" }
-                                GradientStop { position: 1; color: Qt.rgba(0, 0, 0, 0.75) }
-                            }
-
-                            StyledText {
-                                id: caption
-                                anchors {
-                                    left: parent.left
-                                    right: parent.right
-                                    bottom: parent.bottom
-                                    margins: Theme.spaceSm
-                                    bottomMargin: Theme.spaceXs
-                                }
-                                text: cell.modelData.split("/").pop()
-                                elide: Text.ElideMiddle
-                                font.pixelSize: Theme.fontSize - 3
-                            }
-                        }
-
-                        Rectangle {
-                            visible: cell.active
-                            anchors {
-                                top: parent.top
-                                right: parent.right
-                                margins: Theme.spaceSm
-                            }
-                            width: 22
-                            height: 22
-                            radius: height / 2
-                            color: Theme.background
-                            border.width: Theme.borderWidth
-                            border.color: Theme.borderColor
-
-                            GlyphText {
-                                anchors.centerIn: parent
-                                text: Theme.iconCheck
-                                font.pixelSize: Theme.fontSize - 2
-                            }
-                        }
-
-                        HoverHandler {
-                            cursorShape: Qt.PointingHandCursor
-                            onHoveredChanged: if (hovered) grid.currentIndex = cell.index
-                        }
-
-                        TapHandler {
-                            id: tap
-                            onTapped: {
-                                grid.currentIndex = cell.index
-                                root.apply(cell.modelData)
-                            }
+                        path: cell.modelData
+                        current: cell.GridView.isCurrentItem
+                        hoverScale: grid.hoverScale
+                        onHovered: grid.currentIndex = cell.index
+                        onTapped: {
+                            grid.currentIndex = cell.index
+                            Wallpaper.apply(cell.modelData)
                         }
                     }
                 }

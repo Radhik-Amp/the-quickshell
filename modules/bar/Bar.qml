@@ -57,7 +57,14 @@ PanelWindow {
 
                     IconButton {
                         text: "\u{F02F9}"
-                        onClicked: Wallpaper.toggle()
+                        onClicked: Panels.toggle("wallpaper")
+
+                        readonly property real centerX: {
+                            x; width; parent.x; parent.width;
+                            return mapToItem(null, width / 2, 0).x + Theme.padding
+                        }
+                        onCenterXChanged: Panels.setPosition("wallpaper", centerX)
+                        Component.onCompleted: Panels.setPosition("wallpaper", centerX)
                     }
 
                     Tags {}
