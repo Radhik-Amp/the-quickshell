@@ -6,6 +6,7 @@ import qs.modules.lockscreen
 import qs.modules.wallpaper
 import qs.modules.mediacenter
 import qs.modules.weathercenter
+import qs.modules.systemcenter
 
 Scope {
     Bar {}
@@ -15,4 +16,5 @@ Scope {
     WallpaperPicker {}
     MediaCenter {}
     WeatherCenter {}
+    SystemCenter {}
 }

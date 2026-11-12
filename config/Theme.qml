@@ -88,5 +88,10 @@ Singleton {
     readonly property string iconRefresh: "\u{F0450}"
     readonly property string iconFolder: "\u{F024B}"
     readonly property string iconCheck: "\u{F012C}"
+    readonly property string iconLoad: "\u{F04C5}"
+    readonly property string iconUptime: "\u{F051B}"
+    readonly property string iconSwap: "\u{F04E1}"
+    readonly property string iconDisk: "\u{F02CA}"
+    readonly property string iconTasks: "\u{F0279}"
 }
 

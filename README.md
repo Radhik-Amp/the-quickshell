@@ -153,7 +153,7 @@ The shell exposes IPC commands you can bind to keys in Mango.
 | `qs ipc call wallpaper toggle` | Open/close the wallpaper picker |
 | `qs ipc call wallpaper set <path>` | Set a wallpaper |
 | `qs ipc call notifications toggle` | Open/close notifications |
-| `qs ipc call panels toggle <name>` | Toggle a panel: `control`, `media` or `weather` |
+| `qs ipc call panels toggle <name>` | Toggle a panel: `control`, `media`, `weather` or `system` |
 | `qs ipc call panels close` | Close any open panel |
 
 Example binds for `~/.config/mango/config.conf`:
