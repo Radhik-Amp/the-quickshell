@@ -5,6 +5,7 @@ import QtQuick.Layouts
 
 Rectangle {
     id: root
+    // Outlined card with an icon, a muted label and a value.
 
     property string icon
     property string label

@@ -82,37 +82,37 @@ DropdownPanel {
         rowSpacing: Theme.spaceSm
         columnSpacing: Theme.spaceSm
 
-        WeatherDetail {
+        DetailCard {
             Layout.fillWidth: true
             icon: Theme.iconHumidity
             label: "Humidity"
             value: Weather.humidity + "%"
         }
-        WeatherDetail {
+        DetailCard {
             Layout.fillWidth: true
             icon: Theme.iconWind
             label: "Wind"
             value: Math.round(Weather.windSpeed) + " " + Weather.windSpeedUnitLabel + " " + root.windDir
         }
-        WeatherDetail {
+        DetailCard {
             Layout.fillWidth: true
             icon: Theme.iconWind
             label: "Gusts"
             value: Math.round(Weather.windGusts) + " " + Weather.windSpeedUnitLabel
         }
-        WeatherDetail {
+        DetailCard {
             Layout.fillWidth: true
             icon: Theme.iconGauge
             label: "Pressure"
             value: Math.round(Weather.pressure) + " " + (Weather.units.pressure_msl ?? "")
         }
-        WeatherDetail {
+        DetailCard {
             Layout.fillWidth: true
             icon: Theme.iconCloud
             label: "Clouds"
             value: Weather.cloudCover + "%"
         }
-        WeatherDetail {
+        DetailCard {
             Layout.fillWidth: true
             icon: Theme.iconUmbrella
             label: "Precip"

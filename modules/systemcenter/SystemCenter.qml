@@ -1,7 +1,6 @@
 import qs.config
 import qs.components
 import qs.services
-import qs.modules.weathercenter
 import QtQuick
 import QtQuick.Layouts
 
@@ -39,26 +38,26 @@ DropdownPanel {
         rowSpacing: Theme.spaceSm
         columnSpacing: Theme.spaceSm
 
-        WeatherDetail {
+        DetailCard {
             Layout.fillWidth: true
             visible: SystemMonitor.tempSensor !== ""
             icon: Theme.iconTemp
             label: "CPU temp"
             value: SystemMonitor.temp + "°C"
         }
-        WeatherDetail {
+        DetailCard {
             Layout.fillWidth: true
             icon: Theme.iconLoad
             label: "Load"
             value: [SystemMonitor.load1, SystemMonitor.load5, SystemMonitor.load15].map(l => l.toFixed(2)).join(" ")
         }
-        WeatherDetail {
+        DetailCard {
             Layout.fillWidth: true
             icon: Theme.iconUptime
             label: "Uptime"
             value: SystemMonitor.formatUptime(SystemMonitor.uptime)
         }
-        WeatherDetail {
+        DetailCard {
             Layout.fillWidth: true
             icon: Theme.iconSwap
             label: "Swap"
@@ -66,7 +65,7 @@ DropdownPanel {
                 ? SystemMonitor.formatKb(SystemMonitor.swapUsed) + " / " + SystemMonitor.formatKb(SystemMonitor.swapTotal)
                 : "Off"
         }
-        WeatherDetail {
+        DetailCard {
             Layout.fillWidth: true
             icon: Theme.iconDisk
             label: "Disk /"
@@ -74,7 +73,7 @@ DropdownPanel {
                 ? Math.round(SystemMonitor.diskUsed / root.gib) + " / " + Math.round(SystemMonitor.diskTotal / root.gib) + " GiB"
                 : "…"
         }
-        WeatherDetail {
+        DetailCard {
             Layout.fillWidth: true
             icon: Theme.iconTasks
             label: "Tasks"
