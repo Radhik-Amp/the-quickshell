@@ -7,7 +7,7 @@ import QtQuick.Layouts
 
 PanelWindow {
     id: root
-    // Panel frame tethered to the bar, or to the screen edge with edgeReveal, opened via Panels.active.
+    // Panel frame tethered to the bar or a screen edge, opened via Panels.active.
 
     required property string name
     readonly property bool shown: Panels.active === name
@@ -25,17 +25,30 @@ PanelWindow {
     readonly property int panelHeight: column.implicitHeight + Theme.padding * 2
     readonly property real screenWidth: screen?.width ?? 0
 
+    // Tether look and reveal direction; defaults come from VOYAGER_TETHER_STYLE / VOYAGER_TETHER_REVEAL.
+    // style: "line", "thick", "dashed", "bridge" or "none"
+    // reveal: "auto" (sideways from an edge it's clamped to, else down from the bar),
+    //         "vertical" (always down from the bar) or "horizontal" (always from the nearer side edge)
+    property string tetherStyle: Env.tetherStyle
+    property string reveal: Env.tetherReveal
+
     readonly property real idealLeft: anchorX - panelWidth / 2
-    readonly property real panelLeft: Math.round(Math.max(Theme.padding, Math.min(idealLeft, screenWidth - panelWidth - Theme.padding)))
-    readonly property string pinnedEdge: !anchored ? ""
+    readonly property string clampedEdge: !anchored ? ""
         : idealLeft > screenWidth - panelWidth - Theme.padding ? "right"
         : idealLeft < Theme.padding ? "left"
         : ""
-    // When pinned to an edge, wipe in sideways from that edge and tether to it,
-    // instead of unrolling down from the bar.
-    property bool edgeReveal: false
-    readonly property bool horizontal: edgeReveal && pinnedEdge !== ""
-    readonly property int panelX: horizontal && pinnedEdge === "left" ? tether : 0
+    readonly property string nearerEdge: (anchored ? anchorX : screenWidth / 2) < screenWidth / 2 ? "left" : "right"
+    readonly property string edge: reveal === "vertical" ? ""
+        : reveal === "horizontal" ? (clampedEdge || nearerEdge)
+        : clampedEdge
+    readonly property bool horizontal: edge !== ""
+    readonly property real panelLeft: edge === "right" ? screenWidth - panelWidth - Theme.padding
+        : edge === "left" ? Theme.padding
+        : anchored ? Math.round(Math.max(Theme.padding, Math.min(idealLeft, screenWidth - panelWidth - Theme.padding)))
+        : Math.round((screenWidth - panelWidth) / 2)
+    // Bridge corners flare past the panel's sides, so the window leaves room for them
+    readonly property int flare: tetherStyle === "bridge" ? Math.round(tether / 2) : 0
+    readonly property int panelX: edge === "left" ? tether : horizontal ? 0 : flare
 
     property real progress: shown ? 1 : 0
     Behavior on progress {
@@ -46,16 +59,23 @@ PanelWindow {
         }
     }
 
-    implicitWidth: panelWidth + (horizontal ? tether : 0)
-    implicitHeight: tether + panelHeight
+    implicitWidth: panelWidth + (horizontal ? tether : flare * 2)
+    implicitHeight: tether + panelHeight + (horizontal ? flare : 0)
     visible: shown || progress > 0
     color: "transparent"
     exclusionMode: ExclusionMode.Ignore
 
     anchors.top: true
-    anchors.left: anchored
+    anchors.left: true
     margins.top: Theme.padding + Theme.barHeight
-    margins.left: anchored ? panelLeft - panelX : 0
+    margins.left: panelLeft - panelX
+
+    // While a bridged panel hangs from the bar, tell the bar where to open its border
+    readonly property var barGap: tetherStyle === "bridge" && !horizontal && visible
+        ? [panelLeft - flare, panelLeft + panelWidth + flare]
+        : null
+    onBarGapChanged: Panels.setBarGap(name, barGap)
+    Component.onDestruction: Panels.setBarGap(name, null)
 
     mask: Region { item: clipper }
 
@@ -64,7 +84,7 @@ PanelWindow {
     Item {
         id: clipper
         clip: true
-        x: root.horizontal && root.pinnedEdge === "right" ? root.implicitWidth - width : 0
+        x: root.edge === "right" ? root.implicitWidth - width : 0
         width: root.horizontal ? Math.round(root.implicitWidth * root.progress) : root.implicitWidth
         height: root.horizontal ? root.implicitHeight : Math.round(root.implicitHeight * root.progress)
         focus: true
@@ -72,32 +92,41 @@ PanelWindow {
 
         readonly property real frameX: Math.max(0, root.panelX - x)
         readonly property real frameWidth: Math.max(0, Math.min(x + width, root.panelX + root.panelWidth) - Math.max(x, root.panelX))
-        readonly property real frameHeight: Math.max(0, height - root.tether)
+        readonly property real frameHeight: Math.max(0, Math.min(height, root.tether + root.panelHeight) - root.tether)
 
-        Rectangle {
-            visible: !root.horizontal
-            x: root.panelX + Math.round(root.panelWidth / 2) - clipper.x
-            width: Theme.borderWidth
-            height: root.tether
-            color: Theme.borderColor
+        Tether {
+            visible: root.tetherStyle !== "none" && root.tetherStyle !== "bridge"
+            style: root.tetherStyle
+            length: root.tether
+            vertical: !root.horizontal
+            x: root.horizontal
+                ? (root.edge === "right" ? root.panelWidth : 0) - clipper.x
+                : root.panelX + Math.round(root.panelWidth / 2) - Math.floor(width / 2) - clipper.x
+            y: root.horizontal ? root.tether + Math.round(root.panelHeight / 2) - Math.floor(height / 2) : 0
         }
 
         Rectangle {
-            visible: root.horizontal
-            x: (root.pinnedEdge === "right" ? root.panelWidth : 0) - clipper.x
-            y: root.tether + Math.round(root.panelHeight / 2)
-            width: root.tether
-            height: Theme.borderWidth
-            color: Theme.borderColor
-        }
-
-        Rectangle {
+            visible: root.tetherStyle !== "bridge"
             x: clipper.frameX
             y: root.tether
             width: clipper.frameWidth
             height: clipper.frameHeight
             color: Theme.background
             radius: Theme.radius
+        }
+
+        BridgeFrame {
+            visible: root.tetherStyle === "bridge"
+            anchors.fill: parent
+            frameX: clipper.frameX
+            frameY: root.tether
+            frameWidth: clipper.frameWidth
+            frameHeight: clipper.frameHeight
+            edge: root.horizontal ? root.edge : "top"
+            surface: root.edge === "right" ? root.implicitWidth - clipper.x
+                : root.edge === "left" ? -clipper.x
+                : 0
+            fillet: root.flare
         }
 
         ColumnLayout {
@@ -108,6 +137,7 @@ PanelWindow {
         }
 
         Rectangle {
+            visible: root.tetherStyle !== "bridge"
             x: clipper.frameX
             y: root.tether
             width: clipper.frameWidth

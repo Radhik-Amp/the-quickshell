@@ -11,7 +11,6 @@ TetheredPanel {
 
     name: "system"
     anchorX: Panels.positions.system ?? NaN
-    edgeReveal: true
     panelWidth: 460
     spacing: Theme.padding
 

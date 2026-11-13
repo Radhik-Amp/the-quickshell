@@ -14,13 +14,11 @@ TetheredPanel {
     readonly property int columns: 3
     readonly property int rows: 3
     readonly property real hoverScale: 1.03
-    // Sized from panelWidth, not the layout-assigned width, so height-for-width can't go stale
     readonly property real contentWidth: panelWidth - Theme.padding * 2
     readonly property int bleed: Math.ceil(contentWidth / columns * (hoverScale - 1) / 2)
 
     name: "wallpaper"
     anchorX: Panels.positions.wallpaper ?? NaN
-    edgeReveal: true
     focusMode: WlrKeyboardFocus.Exclusive
     panelWidth: 460
     spacing: Theme.padding

@@ -27,6 +27,8 @@ Singleton {
     readonly property string wallpaperDir: envPath("VOYAGER_WALLPAPER_DIR", "~/wallpapers")
     readonly property string cpuTempSensor: envPath("VOYAGER_CPU_TEMP_SENSOR", "") // empty means auto-detect (see SystemMonitor)
     readonly property string font: envString("VOYAGER_FONT", "BlexMono Nerd Font")
+    readonly property string tetherStyle: envChoice("VOYAGER_TETHER_STYLE", "line", ["line", "thick", "dashed", "bridge", "none"])
+    readonly property string tetherReveal: envChoice("VOYAGER_TETHER_REVEAL", "auto", ["auto", "vertical", "horizontal"])
 
     readonly property real latitude: envNumber("VOYAGER_LATITUDE", 51.48, -90, 90)
     readonly property real longitude: envNumber("VOYAGER_LONGITUDE", 0.00, -180, 180)

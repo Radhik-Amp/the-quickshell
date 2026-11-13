@@ -14,6 +14,15 @@ Singleton {
     function open(name: string): void { active = name }
     function close(): void { active = "" }
 
+    property var barGaps: ({})
+
+    function setBarGap(name: string, span: var): void {
+        const next = Object.assign({}, barGaps)
+        if (span) next[name] = span
+        else delete next[name]
+        barGaps = next
+    }
+
     function setPosition(name: string, x: real): void {
         if (positions[name] === x) return
         const next = Object.assign({}, positions)

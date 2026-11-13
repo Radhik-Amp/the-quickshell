@@ -119,6 +119,8 @@ VOYAGER_WALLPAPER_DIR="~/Pictures/Wallpapers"
 | `VOYAGER_WALLPAPER_DIR` | `~/wallpapers` | Folder the wallpaper picker opens |
 | `VOYAGER_CPU_TEMP_SENSOR` | auto-detected | CPU temperature file, only needed if detection picks the wrong sensor or none |
 | `VOYAGER_FONT` | `BlexMono Nerd Font` | Font family (must be a Nerd Font for icons) |
+| `VOYAGER_TETHER_STYLE` | `line` | How panels connect to the bar or screen edge: `line`, `thick`, `dashed`, `bridge` (the panel joins the bar or edge along its whole side, with curved corners) or `none` |
+| `VOYAGER_TETHER_REVEAL` | `auto` | `auto` slides a panel in sideways when it's pushed against a screen edge and drops it down from the bar otherwise; `vertical` always drops down; `horizontal` always tethers to the nearer side edge |
 | `VOYAGER_LATITUDE` | `51.48` | Weather location, `-90` to `90` (default is Greenwich, London) |
 | `VOYAGER_LONGITUDE` | `0.00` | Weather location, `-180` to `180` |
 | `VOYAGER_TEMPERATURE_UNIT` | `fahrenheit` | `celsius` or `fahrenheit` |
@@ -128,6 +130,8 @@ VOYAGER_WALLPAPER_DIR="~/Pictures/Wallpapers"
 | `VOYAGER_SUSPEND_TIMEOUT` | `900` | Seconds idle before suspending |
 
 Invalid values, unknown names and malformed lines are reported in the `qs` log, and the setting falls back to its default.
+
+The tether settings are defaults; a single panel can override them in its QML file, e.g. `tetherStyle: "bridge"` or `reveal: "vertical"` in `modules/systemcenter/SystemCenter.qml`.
 
 Each setting can also be passed as an environment variable of the same name, which wins over the file. That's handy for a one-off test, e.g. `VOYAGER_MONITOR=eDP-1 qs`.
 
