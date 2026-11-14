@@ -14,6 +14,10 @@ Shape {
     property string edge: "top"
     property real surface: 0
     property real fillet: Theme.padding / 2
+    // How far the outline reaches out from the attach surface (Infinity = the whole frame).
+    // The fillets stay at the surface; the far edge sits at this depth, so a growing depth
+    // slides the panel out with its curves already in place.
+    property real depth: Infinity
 
     preferredRendererType: Shape.CurveRenderer
 
@@ -28,10 +32,12 @@ Shape {
             u0 = frameY; u1 = frameY + frameHeight
             v1 = edge === "right" ? s - frameX : frameX + frameWidth - s
         }
+        v1 = Math.min(v1, depth)
         if (u1 - u0 < 1 || v1 < 1) return { fill: "", stroke: "" }
 
         u0 += 0.5; u1 -= 0.5; v1 -= 0.5
-        const f = fillet
+        // Shallow outlines (start of the reveal) shrink the fillets and corners to fit
+        const f = Math.min(fillet, v1 / 2)
         const r = Math.max(0, Math.min(radius, (u1 - u0) / 2, v1 - f))
 
         const mirror = edge === "left"

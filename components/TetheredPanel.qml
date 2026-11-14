@@ -25,12 +25,14 @@ PanelWindow {
     readonly property int panelHeight: column.implicitHeight + Theme.padding * 2
     readonly property real screenWidth: screen?.width ?? 0
 
-    // Tether look and reveal direction; defaults come from VOYAGER_TETHER_STYLE / VOYAGER_TETHER_REVEAL.
+    // Tether look and reveal direction; defaults come from VOYAGER_TETHER_STYLE / _REVEAL / _CONTENT.
     // style: "line", "thick", "dashed", "bridge" or "none"
     // reveal: "auto" (sideways from an edge it's clamped to, else down from the bar),
     //         "vertical" (always down from the bar) or "horizontal" (always from the nearer side edge)
+    // contentMotion (bridge only): "fixed" (uncovered in place) or "slide" (travels with the outline)
     property string tetherStyle: Env.tetherStyle
     property string reveal: Env.tetherReveal
+    property string contentMotion: Env.tetherContent
 
     readonly property real idealLeft: anchorX - panelWidth / 2
     readonly property string clampedEdge: !anchored ? ""
@@ -50,18 +52,51 @@ PanelWindow {
     readonly property int flare: tetherStyle === "bridge" ? Math.round(tether / 2) : 0
     readonly property int panelX: edge === "left" ? tether : horizontal ? 0 : flare
 
-    property real progress: shown ? 1 : 0
-    Behavior on progress {
-        NumberAnimation {
-            duration: 650
-            easing.type: Easing.Bezier
-            easing.bezierCurve: [0.2, 0.8, 0.2, 1, 1, 1]
+    // Reveal progress, 0 (hidden) to 1 (open). Bridged panels use Noctalia's slide timing
+    // (300ms ease-out-cubic open, ease-in-out-quad close); the other styles keep the slower
+    // growing reveal. Started from onShownChanged so the easing is set before it runs.
+    property real progress: 0
+    Component.onCompleted: progress = shown ? 1 : 0
+    onShownChanged: {
+        revealAnim.stop()
+        revealAnim.to = shown ? 1 : 0
+        if (sliding) {
+            revealAnim.duration = 300
+            revealAnim.easing.type = shown ? Easing.OutCubic : Easing.InOutQuad
+        } else {
+            revealAnim.duration = 650
+            revealAnim.easing.type = Easing.Bezier
+            revealAnim.easing.bezierCurve = [0.2, 0.8, 0.2, 1, 1, 1]
         }
+        revealAnim.start()
+    }
+    NumberAnimation {
+        id: revealAnim
+        target: root
+        property: "progress"
     }
 
     implicitWidth: panelWidth + (horizontal ? tether : flare * 2)
     implicitHeight: tether + panelHeight + (horizontal ? flare : 0)
-    visible: shown || progress > 0
+
+    // Bridged panels slide their outline's far edge out from under the bar (or out of the
+    // screen edge) instead of growing a clip, with the curved joins fixed at the bar from the
+    // first frame; the outline is what clips the panel.
+    readonly property bool sliding: tetherStyle === "bridge"
+    readonly property bool contentSlides: contentMotion === "slide"
+    // Depth of the outline from the attach surface to its far edge, how much of it is still
+    // hidden behind the surface, and how much is out
+    readonly property real travel: tether + (horizontal ? panelWidth : panelHeight)
+    readonly property real slide: sliding ? Math.round((1 - progress) * travel) : 0
+    readonly property real reach: travel - slide
+    readonly property real slideX: !sliding || !horizontal ? 0 : edge === "right" ? slide : -slide
+    readonly property real slideY: sliding && !horizontal ? -slide : 0
+
+    // Hide as soon as the reveal has pulled back out of the panel body; the easing's long
+    // tail would otherwise leave a sliver on screen after the panel is gone.
+    readonly property bool bodyVisible: sliding ? reach > Theme.radius
+        : horizontal ? clipper.width > tether : clipper.height > tether
+    visible: shown || bodyVisible
     color: "transparent"
     exclusionMode: ExclusionMode.Ignore
 
@@ -70,23 +105,29 @@ PanelWindow {
     margins.top: Theme.padding + Theme.barHeight
     margins.left: panelLeft - panelX
 
-    // While a bridged panel hangs from the bar, tell the bar where to open its border
-    readonly property var barGap: tetherStyle === "bridge" && !horizontal && visible
-        ? [panelLeft - flare, panelLeft + panelWidth + flare]
-        : null
+    // While a bridged panel hangs from the bar, tell the bar where to open its border: the
+    // span between the outer ends of the curved joins (shrunk with them while the outline is
+    // shallower than the curves, as in BridgeFrame).
+    readonly property var barGap: {
+        if (!sliding || horizontal || !bodyVisible) return null
+        const f = Math.min(flare, (reach - 0.5) / 2)
+        return [panelLeft - f, panelLeft + panelWidth + f]
+    }
     onBarGapChanged: Panels.setBarGap(name, barGap)
     Component.onDestruction: Panels.setBarGap(name, null)
 
-    mask: Region { item: clipper }
+    mask: Region { item: body }
 
     WlrLayershell.keyboardFocus: shown ? focusMode : WlrKeyboardFocus.None
 
+    // Growing reveal clip for the non-bridge styles; bridged panels keep it full-size and
+    // clip by their sliding outline instead
     Item {
         id: clipper
         clip: true
-        x: root.edge === "right" ? root.implicitWidth - width : 0
-        width: root.horizontal ? Math.round(root.implicitWidth * root.progress) : root.implicitWidth
-        height: root.horizontal ? root.implicitHeight : Math.round(root.implicitHeight * root.progress)
+        x: !root.sliding && root.edge === "right" ? root.implicitWidth - width : 0
+        width: !root.sliding && root.horizontal ? Math.round(root.implicitWidth * root.progress) : root.implicitWidth
+        height: !root.sliding && !root.horizontal ? Math.round(root.implicitHeight * root.progress) : root.implicitHeight
         focus: true
         Keys.onEscapePressed: Panels.close()
 
@@ -115,25 +156,37 @@ PanelWindow {
             radius: Theme.radius
         }
 
+        // Outline reaching `reach` out from the bar or screen edge, curved joins fixed there
         BridgeFrame {
-            visible: root.tetherStyle === "bridge"
-            anchors.fill: parent
-            frameX: clipper.frameX
+            visible: root.sliding
+            depth: root.reach
+            width: root.implicitWidth
+            height: root.implicitHeight
+            frameX: root.panelX
             frameY: root.tether
-            frameWidth: clipper.frameWidth
-            frameHeight: clipper.frameHeight
+            frameWidth: root.panelWidth
+            frameHeight: root.panelHeight
             edge: root.horizontal ? root.edge : "top"
-            surface: root.edge === "right" ? root.implicitWidth - clipper.x
-                : root.edge === "left" ? -clipper.x
-                : 0
+            surface: root.edge === "right" ? root.implicitWidth : 0
             fillet: root.flare
         }
 
-        ColumnLayout {
-            id: column
-            x: root.panelX + Theme.padding - clipper.x
-            y: root.tether + Theme.padding
-            width: root.panelWidth - Theme.padding * 2
+        // Panel body: clips the content to the outline (moving with it when sliding). The
+        // content's padding keeps it clear of the rounded corners, so a rect is enough.
+        Item {
+            id: body
+            clip: true
+            x: root.sliding ? root.panelX + root.slideX : clipper.frameX
+            y: root.tether + root.slideY
+            width: root.sliding ? root.panelWidth : clipper.frameWidth
+            height: root.sliding ? root.panelHeight : clipper.frameHeight
+
+            ColumnLayout {
+                id: column
+                x: root.panelX + Theme.padding - clipper.x - body.x + (root.contentSlides ? root.slideX : 0)
+                y: root.tether + Theme.padding - body.y + (root.contentSlides ? root.slideY : 0)
+                width: root.panelWidth - Theme.padding * 2
+            }
         }
 
         Rectangle {

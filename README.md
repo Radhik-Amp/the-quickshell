@@ -121,6 +121,7 @@ VOYAGER_WALLPAPER_DIR="~/Pictures/Wallpapers"
 | `VOYAGER_FONT` | `BlexMono Nerd Font` | Font family (must be a Nerd Font for icons) |
 | `VOYAGER_TETHER_STYLE` | `line` | How panels connect to the bar or screen edge: `line`, `thick`, `dashed`, `bridge` (the panel joins the bar or edge along its whole side, with curved corners) or `none` |
 | `VOYAGER_TETHER_REVEAL` | `auto` | `auto` slides a panel in sideways when it's pushed against a screen edge and drops it down from the bar otherwise; `vertical` always drops down; `horizontal` always tethers to the nearer side edge |
+| `VOYAGER_TETHER_CONTENT` | `fixed` | Bridge style only, where the outline slides out from under the bar or edge: `fixed` uncovers the content in place, `slide` moves it with the outline |
 | `VOYAGER_LATITUDE` | `51.48` | Weather location, `-90` to `90` (default is Greenwich, London) |
 | `VOYAGER_LONGITUDE` | `0.00` | Weather location, `-180` to `180` |
 | `VOYAGER_TEMPERATURE_UNIT` | `fahrenheit` | `celsius` or `fahrenheit` |
@@ -131,7 +132,7 @@ VOYAGER_WALLPAPER_DIR="~/Pictures/Wallpapers"
 
 Invalid values, unknown names and malformed lines are reported in the `qs` log, and the setting falls back to its default.
 
-The tether settings are defaults; a single panel can override them in its QML file, e.g. `tetherStyle: "bridge"` or `reveal: "vertical"` in `modules/systemcenter/SystemCenter.qml`.
+The tether settings are defaults; a single panel can override them in its QML file, e.g. `tetherStyle: "bridge"`, `reveal: "vertical"` or `contentMotion: "slide"` in `modules/systemcenter/SystemCenter.qml`.
 
 Each setting can also be passed as an environment variable of the same name, which wins over the file. That's handy for a one-off test, e.g. `VOYAGER_MONITOR=eDP-1 qs`.
 
