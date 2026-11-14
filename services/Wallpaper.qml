@@ -48,10 +48,12 @@ Singleton {
 
     function set(path: string) {
         setter.command = ["awww", "img", path,
-                          "--transition-type", "center",
-                          "--transition-duration", "0.6",
-                          "--transition-bezier", "0.22,1,0.36,1",
-                          "--transition-fps", "144"]
+                          "--transition-type", Env.wallpaperTransition,
+                          "--transition-duration", String(Env.wallpaperDuration),
+                          "--transition-bezier", Env.wallpaperBezier,
+                          "--transition-fps", String(Env.wallpaperFps),
+                          "--transition-angle", String(Env.wallpaperAngle),
+                          "--transition-pos", Env.wallpaperPosition]
         setter.running = true
     }
 
@@ -64,9 +66,80 @@ Singleton {
         else openPreview()
     }
 
+    // Preview: minimize the windows on the current tag so the real wallpaper (and awww's
+    // transitions) show behind the wallpaper panel, which opens along with it
     function openPreview() {
-        Panels.close()
+        Panels.open("wallpaper")
         root.previewShown = true
+    }
+
+    // Windows the preview minimized, in restore order: [{ id, tags }]. Also saved to
+    // stateFile, so a crash or reload mid-preview restores them on the next start.
+    property var hiddenClients: []
+    readonly property string stateFile: '"${XDG_STATE_HOME:-$HOME/.local/state}/voyager/preview-hidden.json"'
+
+    onPreviewShownChanged: {
+        if (previewShown) clientQuery.running = true
+        else restoreClients()
+    }
+
+    function hideClients(text) {
+        if (!previewShown) return // preview closed before the query came back
+        let clients = []
+        try { clients = JSON.parse(text).clients ?? [] } catch (e) { console.warn("wallpaper: couldn't read clients:", e) }
+
+        const shown = clients.filter(c => c.is_visible && !c.is_minimized
+            && !c.is_scratchpad && !c.is_namedscratchpad
+            && (!Mango.monitor || c.monitor === Mango.monitor))
+        if (!shown.length) return
+        // The focused window is restored last so it gets focus back
+        shown.sort((a, b) => a.is_focused - b.is_focused)
+
+        hiddenClients = hiddenClients.concat(shown.map(c => ({ id: c.id, tags: c.tags })))
+        const state = JSON.stringify(hiddenClients)
+        run(shown.map(c => "mmsg dispatch minimized client," + c.id)
+            .concat([`mkdir -p "$(dirname ${stateFile})"`, `printf '%s' '${state}' > ${stateFile}`]))
+    }
+
+    function restoreClients() {
+        if (!hiddenClients.length) return
+        // Restored windows land on the tag being viewed; send any back that came from another
+        const active = Mango.tags.find(t => t.is_active)?.index
+        const cmds = []
+        for (const c of hiddenClients) {
+            cmds.push("mmsg dispatch restore_minimized client," + c.id)
+            if (c.tags.length === 1 && c.tags[0] !== active)
+                cmds.push(`mmsg dispatch tagsilent,${c.tags[0]} client,${c.id}`)
+        }
+        hiddenClients = []
+        run(cmds.concat(["rm -f " + stateFile]))
+    }
+
+    function run(cmds) {
+        Quickshell.execDetached(["sh", "-c", cmds.join("; ")])
+    }
+
+    Process {
+        id: clientQuery
+        command: ["mmsg", "get", "all-clients"]
+        stdout: StdioCollector { onStreamFinished: root.hideClients(text) }
+    }
+
+    // Windows left minimized by a preview that never closed (crash, reload)
+    Process {
+        id: leftoverQuery
+        command: ["sh", "-c", "cat " + root.stateFile + " 2>/dev/null"]
+        stdout: StdioCollector {
+            onStreamFinished: {
+                try {
+                    const leftover = JSON.parse(text)
+                    if (Array.isArray(leftover) && leftover.length) {
+                        root.hiddenClients = leftover
+                        root.restoreClients()
+                    }
+                } catch (e) {}
+            }
+        }
     }
 
     function fileUrl(path) {
@@ -143,7 +216,10 @@ Singleton {
 
     Process { id: setter; onExited: query.running = true}
 
-    Component.onCompleted: refresh()
+    Component.onCompleted: {
+        refresh()
+        leftoverQuery.running = true
+    }
 
     Timer {
         id: retryTimer

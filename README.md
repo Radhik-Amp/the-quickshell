@@ -117,6 +117,12 @@ VOYAGER_WALLPAPER_DIR="~/Pictures/Wallpapers"
 | --- | --- | --- |
 | `VOYAGER_MONITOR` | auto-detected | Output the bar and its tags go on, e.g. `HDMI-A-1`. Only needed to pick a different monitor than the detected one |
 | `VOYAGER_WALLPAPER_DIR` | `~/wallpapers` | Folder the wallpaper picker opens |
+| `VOYAGER_WALLPAPER_TRANSITION` | `center` | awww transition when setting a wallpaper: `none`, `simple`, `fade`, `left`, `right`, `top`, `bottom`, `wipe`, `wave`, `grow`, `center`, `any`, `outer` or `random` |
+| `VOYAGER_WALLPAPER_DURATION` | `0.6` | Transition length in seconds (not used by `simple`) |
+| `VOYAGER_WALLPAPER_FPS` | `144` | Transition frame rate; no point going above your monitor's refresh rate |
+| `VOYAGER_WALLPAPER_BEZIER` | `0.22,1,0.36,1` | Transition easing curve, four numbers |
+| `VOYAGER_WALLPAPER_ANGLE` | `45` | `wipe` and `wave` angle in degrees: `0` is right to left, `90` top to bottom |
+| `VOYAGER_WALLPAPER_POSITION` | `center` | `grow` and `outer` circle center, e.g. `center`, `top-left`, `0.5,0.5` or `200,400` (see `awww img --help`) |
 | `VOYAGER_CPU_TEMP_SENSOR` | auto-detected | CPU temperature file, only needed if detection picks the wrong sensor or none |
 | `VOYAGER_FONT` | `BlexMono Nerd Font` | Font family (must be a Nerd Font for icons) |
 | `VOYAGER_TETHER_STYLE` | `line` | How panels connect to the bar or screen edge: `line`, `thick`, `dashed`, `bridge` (the panel joins the bar or edge along its whole side, with curved corners) or `none` |
@@ -156,7 +162,7 @@ The shell exposes IPC commands you can bind to keys in Mango.
 | `qs ipc call lockscreen lock` | Lock the screen |
 | `qs ipc call lockscreen lockAndSuspend` | Lock and suspend |
 | `qs ipc call wallpaper toggle` | Open/close the wallpaper panel |
-| `qs ipc call wallpaper preview` | Open/close the fullscreen wallpaper preview |
+| `qs ipc call wallpaper preview` | Preview: minimize the windows on the current tag so the wallpaper shows behind the wallpaper panel (again to restore them) |
 | `qs ipc call wallpaper set <path>` | Set a wallpaper |
 | `qs ipc call notifications toggle` | Open/close notifications |
 | `qs ipc call panels toggle <name>` | Toggle a panel: `control`, `media`, `weather`, `system` or `wallpaper` |

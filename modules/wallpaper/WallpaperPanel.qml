@@ -23,12 +23,18 @@ TetheredPanel {
     panelWidth: 460
     spacing: Theme.padding
 
-    onShownChanged: if (shown) Qt.callLater(() => {
-        const i = Math.max(0, Wallpaper.entries.indexOf(Wallpaper.currentPaths[root.screen?.name]))
-        grid.currentIndex = i
-        grid.positionViewAtIndex(i, GridView.Contain)
-        grid.forceActiveFocus()
-    })
+    onShownChanged: {
+        if (!shown) {
+            Wallpaper.previewShown = false
+            return
+        }
+        Qt.callLater(() => {
+            const i = Math.max(0, Wallpaper.entries.indexOf(Wallpaper.currentPaths[root.screen?.name]))
+            grid.currentIndex = i
+            grid.positionViewAtIndex(i, GridView.Contain)
+            grid.forceActiveFocus()
+        })
+    }
 
     RowLayout {
         Layout.fillWidth: true
@@ -45,11 +51,13 @@ TetheredPanel {
             font.pixelSize: Theme.fontSize - 3
         }
         IconButton {
+            id: previewButton
             implicitWidth: 30
             implicitHeight: 30
             text: Theme.iconExpand
             font.pixelSize: 18
-            onClicked: Wallpaper.openPreview()
+            color: Wallpaper.previewShown || previewButton.hovered ? Theme.tagHover : "transparent"
+            onClicked: Wallpaper.togglePreview()
         }
     }
 

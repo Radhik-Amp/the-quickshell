@@ -25,6 +25,15 @@ Singleton {
 
     readonly property string monitor: envString("VOYAGER_MONITOR", "") // empty means auto-detect (see Mango)
     readonly property string wallpaperDir: envPath("VOYAGER_WALLPAPER_DIR", "~/wallpapers")
+    // awww transition used when setting a wallpaper (see `awww img --help`)
+    readonly property string wallpaperTransition: envChoice("VOYAGER_WALLPAPER_TRANSITION", "center",
+        ["none", "simple", "fade", "left", "right", "top", "bottom", "wipe", "wave", "grow", "center", "any", "outer", "random"])
+    readonly property real wallpaperDuration: envNumber("VOYAGER_WALLPAPER_DURATION", 0.6, 0, 60)
+    readonly property int wallpaperFps: envNumber("VOYAGER_WALLPAPER_FPS", 144, 1, 1000, true)
+    readonly property string wallpaperBezier: envPattern("VOYAGER_WALLPAPER_BEZIER", "0.22,1,0.36,1",
+        /^-?\d*\.?\d+(,-?\d*\.?\d+){3}$/, "four comma-separated numbers like 0.22,1,0.36,1")
+    readonly property real wallpaperAngle: envNumber("VOYAGER_WALLPAPER_ANGLE", 45, 0, 360)
+    readonly property string wallpaperPosition: envString("VOYAGER_WALLPAPER_POSITION", "center")
     readonly property string cpuTempSensor: envPath("VOYAGER_CPU_TEMP_SENSOR", "") // empty means auto-detect (see SystemMonitor)
     readonly property string font: envString("VOYAGER_FONT", "BlexMono Nerd Font")
     readonly property string tetherStyle: envChoice("VOYAGER_TETHER_STYLE", "line", ["line", "thick", "dashed", "bridge", "none"])
@@ -99,6 +108,13 @@ Singleton {
         if (isNaN(n) || n < min || n > max || (integer && !Number.isInteger(n)))
             return invalid(name, value, fallback, integer ? `a whole number >= ${min}` : `a number from ${min} to ${max}`)
         return n
+    }
+
+    function envPattern(name, fallback, pattern, expected) {
+        const value = raw(name).replace(/\s+/g, "")
+        if (!value) return fallback
+        if (!pattern.test(value)) return invalid(name, value, fallback, expected)
+        return value
     }
 
     function envChoice(name, fallback, choices) {

@@ -8,6 +8,7 @@ Rectangle {
     property alias text: label.text
     property alias textColor: label.color
     property alias font: label.font
+    readonly property alias hovered: hover.hovered
     signal clicked()
 
     implicitWidth: Theme.tagHeight

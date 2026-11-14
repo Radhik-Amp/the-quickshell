@@ -14,7 +14,6 @@ Scope {
     ControlCenter {}
     LockScreen {}
     WallpaperPanel {}
-    WallpaperPreview {}
     MediaCenter {}
     WeatherCenter {}
     SystemCenter {}
