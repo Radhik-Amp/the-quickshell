@@ -54,22 +54,52 @@ PanelWindow {
 
     // Reveal progress, 0 (hidden) to 1 (open). Bridged panels use Noctalia's slide timing
     // (300ms ease-out-cubic open, ease-in-out-quad close); the other styles keep the slower
-    // growing reveal. Started from onShownChanged so the easing is set before it runs.
+    // growing reveal. Started from onOpeningChanged so the easing is set before it runs.
     property real progress: 0
-    Component.onCompleted: progress = shown ? 1 : 0
-    onShownChanged: {
+    Component.onCompleted: progress = opening ? 1 : 0
+
+    // Switching panels: the new one holds back while a closing panel still covers the screen
+    // area it will open into, starting as soon as that area clears (panels that don't
+    // overlap swap at once). A panel closing because another opened closes twice as fast.
+    readonly property real windowLeft: panelLeft - panelX
+    readonly property real windowTop: Theme.padding + Theme.barHeight
+    readonly property bool blocked: {
+        if (!shown) return false
+        const ext = Panels.extents
+        for (const other in ext) {
+            const r = ext[other]
+            if (other !== name
+                && r[0] < windowLeft + implicitWidth && r[0] + r[2] > windowLeft
+                && r[1] < windowTop + implicitHeight && r[1] + r[3] > windowTop)
+                return true
+        }
+        return false
+    }
+    readonly property bool opening: shown && !blocked
+    onOpeningChanged: {
         revealAnim.stop()
-        revealAnim.to = shown ? 1 : 0
+        revealAnim.to = opening ? 1 : 0
+        const handoff = !opening && Panels.active !== ""
         if (sliding) {
-            revealAnim.duration = 300
-            revealAnim.easing.type = shown ? Easing.OutCubic : Easing.InOutQuad
+            revealAnim.duration = handoff ? 150 : 300
+            revealAnim.easing.type = opening ? Easing.OutCubic : Easing.InOutQuad
         } else {
-            revealAnim.duration = 650
+            revealAnim.duration = handoff ? 325 : 650
             revealAnim.easing.type = Easing.Bezier
             revealAnim.easing.bezierCurve = [0.2, 0.8, 0.2, 1, 1, 1]
         }
         revealAnim.start()
     }
+
+    // The screen rect the panel covers right now (null once hidden)
+    readonly property var extent: {
+        if (!bodyVisible) return null
+        if (!sliding) return [windowLeft + clipper.x, windowTop, clipper.width, clipper.height]
+        if (!horizontal) return [windowLeft, windowTop, implicitWidth, reach]
+        if (edge === "right") return [windowLeft + implicitWidth - reach, windowTop, reach, implicitHeight]
+        return [windowLeft, windowTop, reach, implicitHeight]
+    }
+    onExtentChanged: Panels.setExtent(name, extent)
     NumberAnimation {
         id: revealAnim
         target: root
@@ -103,7 +133,7 @@ PanelWindow {
     anchors.top: true
     anchors.left: true
     margins.top: Theme.padding + Theme.barHeight
-    margins.left: panelLeft - panelX
+    margins.left: windowLeft
 
     // While a bridged panel hangs from the bar, tell the bar where to open its border: the
     // span between the outer ends of the curved joins (shrunk with them while the outline is
@@ -114,7 +144,10 @@ PanelWindow {
         return [panelLeft - f, panelLeft + panelWidth + f]
     }
     onBarGapChanged: Panels.setBarGap(name, barGap)
-    Component.onDestruction: Panels.setBarGap(name, null)
+    Component.onDestruction: {
+        Panels.setBarGap(name, null)
+        Panels.setExtent(name, null)
+    }
 
     mask: Region { item: body }
 

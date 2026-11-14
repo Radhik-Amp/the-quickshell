@@ -23,6 +23,18 @@ Singleton {
         barGaps = next
     }
 
+    // Screen rect [x, y, w, h] each visible panel currently covers, so an opening panel can
+    // wait for a closing one to get out of its way
+    property var extents: ({})
+
+    function setExtent(name: string, rect: var): void {
+        if (!rect && !(name in extents)) return
+        const next = Object.assign({}, extents)
+        if (rect) next[name] = rect
+        else delete next[name]
+        extents = next
+    }
+
     function setPosition(name: string, x: real): void {
         if (positions[name] === x) return
         const next = Object.assign({}, positions)
