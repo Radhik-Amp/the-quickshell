@@ -6,6 +6,7 @@ import qs.services
 import Quickshell
 import Quickshell.Wayland
 import QtQuick
+import QtQuick.Controls
 import QtQuick.Layouts
 
 TetheredPanel {
@@ -59,6 +60,75 @@ TetheredPanel {
             color: Wallpaper.previewShown || previewButton.hovered ? Theme.tagHover : "transparent"
             onClicked: Wallpaper.togglePreview()
         }
+    }
+
+    RowLayout {
+        Layout.fillWidth: true
+        spacing: Theme.spaceSm
+
+        Rectangle {
+            Layout.fillWidth: true
+            Layout.preferredHeight: 30
+            radius: Theme.radius
+            color: pathField.activeFocus ? Theme.background : "transparent"
+            border.width: Theme.borderWidth
+            border.color: pathField.activeFocus ? Theme.borderColor : Theme.borderColorMuted
+
+            RowLayout {
+                anchors.fill: parent
+                anchors.leftMargin: Theme.spaceSm
+                anchors.rightMargin: Theme.spaceSm
+                spacing: Theme.spaceSm
+
+                GlyphText {
+                    text: Theme.iconFolder
+                    color: Theme.textMuted
+                }
+
+                TextField {
+                    id: pathField
+                    Layout.fillWidth: true
+
+                    readonly property string displayPath: Wallpaper.currentDirectory.replace(Quickshell.env("HOME"), "~")
+
+                    text: displayPath
+                    placeholderText: "Enter path..."
+                    placeholderTextColor: Qt.rgba(1, 1, 1, 0.4)
+                    color: Theme.text
+                    font.family: Theme.fontFamily
+                    font.pixelSize: Theme.fontSize
+                    background: null
+                    padding: 0
+                    verticalAlignment: TextInput.AlignVCenter
+
+                    onAccepted: {
+                        if (text.length > 0) Wallpaper.setDirectory(text)
+                        grid.forceActiveFocus()
+                    }
+                    onTextEdited: Wallpaper.directoryError = ""
+                    onActiveFocusChanged: if (!activeFocus) text = Qt.binding(() => displayPath)
+                    // Cancel the edit instead of closing the panel
+                    Keys.onEscapePressed: grid.forceActiveFocus()
+                }
+            }
+        }
+
+        IconButton {
+            implicitWidth: 30
+            implicitHeight: 30
+            text: Theme.iconRefresh
+            font.pixelSize: 18
+            onClicked: Wallpaper.refresh()
+        }
+    }
+
+    StyledText {
+        Layout.fillWidth: true
+        visible: text !== ""
+        horizontalAlignment: Text.AlignHCenter
+        text: Wallpaper.directoryError
+        color: "red"
+        wrapMode: Text.Wrap
     }
 
     StyledText {
