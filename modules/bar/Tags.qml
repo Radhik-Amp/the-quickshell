@@ -9,6 +9,12 @@ RowLayout {
 
     spacing: Theme.spaceSm
 
+    readonly property color fillActive: Qt.rgba(1, 1, 1, 0.28)
+    readonly property color fillHover: Qt.rgba(1, 1, 1, 0.14)
+    readonly property color fillUrgent: Qt.rgba(1, 1, 1, 0.45)
+    readonly property color borderOccupied: Qt.rgba(1, 1, 1, 0.40)
+    readonly property color borderActive: Qt.rgba(1, 1, 1, 0.55)
+
     WheelHandler {
         property real accumulated: 0
 
@@ -41,17 +47,48 @@ RowLayout {
             readonly property bool active: info ? info.is_active : false
             readonly property bool occupied: info ? info.client_count > 0 : false
             readonly property bool urgent: info ? info.is_urgent : false
+            readonly property bool minimized: !occupied && Wallpaper.hiddenClients.some(c => c.tags.includes(number))
 
             implicitWidth: Theme.tagWidth
             implicitHeight: Theme.tagHeight
             radius: Theme.radius
             border.width: 1
-            border.color: active ? Theme.tagBorderActive 
-                        : occupied ? Theme.tagBorder
-                        : Theme.tagBorderEmpty
-            color: active ? Theme.tagActive
-                 : urgent ? Theme.tagUrgent
-                 : hover.hovered ? Theme.tagHover
+            border.color: minimized ? "transparent"
+                        : active ? root.borderActive
+                        : occupied ? root.borderOccupied
+                        : "transparent"
+
+            Repeater {
+                model: tag.minimized ? [
+                    [0, 0],
+                    [tag.width - tag.radius, 0],
+                    [0, tag.height - tag.radius],
+                    [tag.width - tag.radius, tag.height - tag.radius]
+                ] : []
+
+                Item {
+                    required property var modelData
+                    x: modelData[0]
+                    y: modelData[1]
+                    width: tag.radius
+                    height: tag.radius
+                    clip: true
+
+                    Rectangle {
+                        x: -parent.x
+                        y: -parent.y
+                        width: tag.width
+                        height: tag.height
+                        radius: tag.radius
+                        color: "transparent"
+                        border.width: 1
+                        border.color: tag.active ? root.borderActive : root.borderOccupied
+                    }
+                }
+            }
+            color: active ? root.fillActive
+                 : urgent ? root.fillUrgent
+                 : hover.hovered ? root.fillHover
                  : "transparent"
 
             StyledText {
